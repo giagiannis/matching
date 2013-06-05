@@ -80,6 +80,14 @@ public class PersonList {
 		return count;
 	}
 	
+	/**
+	 * Returns true if there exist unmarried people or false if everyone is married.
+	 * @return
+	 */
+	public boolean hasSinglePeople(){
+		return this.getNumberOfSingles()>0;
+	}
+	
 	@Override
 	public String toString() {
 		String buffer="[";

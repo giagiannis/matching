@@ -60,7 +60,6 @@ public class Person {
 	public void marry(Person person){
 		if(this.isMarried())
 			this.divorce();
-		System.out.println(this.id+" getting married");
 		this.partner=person;
 		if(this.partner.getCurrentPartner()==null || this.partner.getCurrentPartner().getId()!=this.getId())
 			this.partner.marry(this);
@@ -72,7 +71,6 @@ public class Person {
 	public void divorce(){
 		if(!isMarried())
 			return;
-		System.out.println(this.id+" breaking up");
 		Person previous=this.partner;
 		this.partner=Person.STATE_BAKOURI;
 		if(previous.getCurrentPartner()!=null && previous.getCurrentPartner().getId()==this.getId())

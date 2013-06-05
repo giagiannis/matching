@@ -9,20 +9,38 @@ import java.util.Iterator;
  * @author Giannis Giannakopoulos
  *
  */
-public class StableMarriageAlgorithm {
+public class StableMarriageAlgorithm extends StableMatchingAlgorithm{
 
-	private PersonList men, women;
 	
 	public StableMarriageAlgorithm(PersonList men, PersonList women) {
-		this.men=men;
-		this.women=women;
+		super(men,women);
 	}
+	
 	
 	public void step(){
 		Iterator<Person> it = this.men.getSinglePersonIterator();
 		while(it.hasNext()){
 			Person man = it.next(), woman =this.women.get(man.getPreferences().getNextPreference()); 
-			man.propose(woman);
+			if(man.propose(woman)){
+				System.out.println(man +" marries "+woman);
+			}
 		}
+		System.out.println("Left men:\t"+men.getNumberOfSingles());
+		System.out.println("Left women:\t"+women.getNumberOfSingles());
+	}
+	
+	
+	public static void main(String[] args) {
+		if(args.length<2){
+			System.err.println("I need men and women preferences!");
+			System.exit(1);
+		}
+		
+		DatasetReader reader = new DatasetReader(args[0]);
+		PersonList men = reader.getPeople();
+		reader = new DatasetReader(args[1]);
+		PersonList women = reader.getPeople();
+		StableMarriageAlgorithm algo = new StableMarriageAlgorithm(men, women);
+		algo.run();
 	}
 }
