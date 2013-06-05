@@ -9,7 +9,7 @@ import java.util.Iterator;
  * @author Giannis Giannakopoulos
  *
  */
-public class StableMarriageAlgorithm extends StableMatchingAlgorithm{
+public class StableMarriageAlgorithm extends AbstractStableMatchingAlgorithm{
 
 	
 	public StableMarriageAlgorithm(PersonList men, PersonList women) {
