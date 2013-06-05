@@ -62,8 +62,22 @@ public class PersonList {
 	 * Returns an iterator which returns only the not married people of the list
 	 * @return
 	 */
-	public Iterator<Person> getFreePersonIterator() {
+	public Iterator<Person> getSinglePersonIterator() {
 		return new FreePersonIterator(this);
+	}
+	
+	/**
+	 * Returns the number of single people on the list
+	 * @return
+	 */
+	public int getNumberOfSingles(){
+		int count=0;
+		Iterator<Person> it = this.getSinglePersonIterator();
+		while(it.hasNext()){
+			it.next();
+			count+=1;
+		}
+		return count;
 	}
 	
 	@Override
@@ -85,13 +99,14 @@ public class PersonList {
 		list.get(1).propose(list.get(2));
 		list.get(3).propose(list.get(2));
 		System.out.println("after");
-		p = list.getFreePersonIterator();
+		System.out.println("Singles:\t"+list.getNumberOfSingles());
+		p = list.getSinglePersonIterator();
 		while(p.hasNext()){
 			System.out.println(p.next());
 		}
 		list.get(3).divorce();
 		System.out.println("again");
-		p = list.getFreePersonIterator();
+		p = list.getSinglePersonIterator();
 		while(p.hasNext()){
 			System.out.println(p.next());
 		}

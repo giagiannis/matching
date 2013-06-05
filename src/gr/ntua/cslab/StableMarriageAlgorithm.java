@@ -19,7 +19,7 @@ public class StableMarriageAlgorithm {
 	}
 	
 	public void step(){
-		Iterator<Person> it = this.men.getFreePersonIterator();
+		Iterator<Person> it = this.men.getSinglePersonIterator();
 		while(it.hasNext()){
 			Person man = it.next(), woman =this.women.get(man.getPreferences().getNextPreference()); 
 			man.propose(woman);
