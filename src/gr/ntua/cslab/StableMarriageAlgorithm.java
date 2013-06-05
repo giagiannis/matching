@@ -42,5 +42,6 @@ public class StableMarriageAlgorithm extends AbstractStableMatchingAlgorithm{
 		PersonList women = reader.getPeople();
 		StableMarriageAlgorithm algo = new StableMarriageAlgorithm(men, women);
 		algo.run();
+		System.out.println("Number of steps:\t"+algo.getStepCounter());
 	}
 }
