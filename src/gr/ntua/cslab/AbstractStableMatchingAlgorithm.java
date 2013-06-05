@@ -8,7 +8,7 @@ package gr.ntua.cslab;
 public abstract class AbstractStableMatchingAlgorithm {
 
 	protected PersonList men, women;
-	
+	private int stepCounter;
 	/**
 	 * Empty constructor
 	 */
@@ -67,7 +67,14 @@ public abstract class AbstractStableMatchingAlgorithm {
 	 * Default running method: while there exist single people, marry them
 	 */
 	public void run() {
-		while(this.men.hasSinglePeople())
+		this.stepCounter=0;
+		while(this.men.hasSinglePeople()){
 			this.step();
+			this.stepCounter++;
+		}
+	}
+	
+	public int getStepCounter(){
+		return this.stepCounter;
 	}
 }
