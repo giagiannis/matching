@@ -1,4 +1,6 @@
-package gr.ntua.cslab;
+package gr.ntua.cslab.algo;
+
+import gr.ntua.cslab.containers.PersonList;
 
 /**
  * Abstract class used as a base for each stable matching algorithm.

@@ -1,4 +1,8 @@
-package gr.ntua.cslab;
+package gr.ntua.cslab.algo;
+
+import gr.ntua.cslab.DatasetReader;
+import gr.ntua.cslab.containers.Person;
+import gr.ntua.cslab.containers.PersonList;
 
 import java.util.Iterator;
 
