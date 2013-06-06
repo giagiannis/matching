@@ -63,6 +63,9 @@ public class Generator {
 		return buffer;
 	}
 	
+	/**
+	 * Creates the dataset.
+	 */
 	public void create(){
 		this.out.println(this.datasetSize);
 		for(int i=0;i<this.datasetSize;i++)
