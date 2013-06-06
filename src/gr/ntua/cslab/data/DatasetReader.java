@@ -1,4 +1,8 @@
-package gr.ntua.cslab;
+package gr.ntua.cslab.data;
+
+import gr.ntua.cslab.containers.Person;
+import gr.ntua.cslab.containers.PersonList;
+import gr.ntua.cslab.containers.Preferences;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
