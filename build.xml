@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="matching" default="pack">
+	<description>Ant buildfile for compiling and packing the src files. The default target is pack.</description>
+	<property name="src" location="src"/>
+	<property name="bin" location="bin"/>
+	<property name="lib" location="lib"/>
+	<property name="jar" location="pack.jar"/>
+	<!-- <property name="conf" location="conf"/>	 -->
+	
+	<path id="classpath">
+		<fileset dir="${lib}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+
+
+	<target name="init" description="This target creates the directory where the class files will exist">
+		<mkdir dir="${bin}"/>
+	</target>
+	
+	<target name="compile" depends="init" description="This target compiles the source files and places the bytecode into the bin directory">
+		<javac srcdir="${src}" destdir="${bin}" includeantruntime="false" classpathref="classpath"/>
+	</target>
+	
+	<target name="pack" depends="compile" description="This target packs the classes file into a single jar file">
+		<jar destfile="${jar}" basedir="${bin}"/>
+	</target>
+	
+	<target name="clean" description="This target cleans the workspace by removing classes and created jars.">
+		<delete dir="${bin}" file="${jar}"/>
+	</target>
+	
+	<!-- 
+	<target name="scp" depends="pack">
+		<exec executable="scp" failonerror="true">
+			<arg value="${jar}"/>
+			<arg value="ggian@clone2.cslab.ece.ntua.gr:/local/ggian/"/>
+		</exec>
+		<exec executable="scp" failonerror="true">
+			<arg value="${conf}"/>
+			<arg value="ggian@clone2.cslab.ece.ntua.gr:/local/ggian/"/>
+		</exec>
+	</target>
+	 -->
+</project>
