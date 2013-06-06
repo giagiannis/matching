@@ -1,4 +1,4 @@
-package gr.ntua.cslab;
+package gr.ntua.cslab.containers;
 
 /**
  * Preferences object holds the preferences of a man or woman. A number of methods are provided to set and get

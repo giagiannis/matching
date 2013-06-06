@@ -1,4 +1,6 @@
-package gr.ntua.cslab;
+package gr.ntua.cslab.containers;
+
+import gr.ntua.cslab.DatasetReader;
 
 import java.util.Iterator;
 

@@ -1,4 +1,4 @@
-package gr.ntua.cslab;
+package gr.ntua.cslab.containers;
 
 /**
  * Person class is modeling the actions that a person can do. 
