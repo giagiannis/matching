@@ -13,6 +13,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 	protected PersonList men, women;
 	private int stepCounter;
 	protected int numberOfMarriages=0;
+	private long execDuration;
 	/**
 	 * Empty constructor
 	 */
@@ -71,22 +72,33 @@ public abstract class AbstractStableMatchingAlgorithm {
 	 * Default running method: while there exist single people, marry them
 	 */
 	public void run() {
+		long start=System.currentTimeMillis();
 		this.stepCounter=0;
 		while(this.men.hasSinglePeople()){
 			this.step();
 			this.stepCounter++;
 		}
+		this.execDuration=System.currentTimeMillis()-start;
 	}
 	
-	protected void happinessMessage(){
+	/**
+	 * Method used to print the algorithm's performance. It returns the number of steps, the number of marriages,
+	 * the average rank according to men's preferences, the average rank according to women's preferences, the average
+	 * couple rank and the execution duration (in millis).
+	 */
+	protected void performance(){
 		// Happiness control
+		System.out.print(this.stepCounter+"\t");
+		System.out.print(this.numberOfMarriages+"\t");
+		
 		HappinessMetrics metr = new HappinessMetrics(this.men);
-		System.out.println("Men average rank:\t"+metr.getAverageRank());
+		System.out.format("%.2f\t",metr.getAverageRank());
 		
 		metr = new HappinessMetrics(this.women);
-		System.out.println("Women average rank:\t"+metr.getAverageRank());
+		System.out.format("%.2f\t",metr.getAverageRank());
+		System.out.format("%.2f\t",metr.getAverageCoupleRank());
 		
-		System.out.println("Couple average rank:\t"+metr.getAverageCoupleRank());
+		System.out.format("%d",this.execDuration);
 	}
 	
 	public int getStepCounter(){

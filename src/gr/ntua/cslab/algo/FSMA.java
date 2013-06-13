@@ -57,9 +57,8 @@ public class FSMA extends AbstractStableMatchingAlgorithm{
 		PersonList women = reader.getPeople();
 		AbstractStableMatchingAlgorithm algo = new FSMA(men, women);
 		algo.run();
-		System.out.println("Number of steps:\t"+algo.getStepCounter());
-		System.out.println("Number of marriages:\t"+algo.numberOfMarriages);
-		algo.happinessMessage();
+
+		algo.performance();
 	}
 
 	

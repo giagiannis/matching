@@ -44,8 +44,7 @@ public class SMA extends AbstractStableMatchingAlgorithm{
 		PersonList women = reader.getPeople();
 		SMA algo = new SMA(men, women);
 		algo.run();
-		System.out.println("Number of steps:\t"+algo.getStepCounter());
-		System.out.println("Number of marriages:\t"+algo.numberOfMarriages);
-		algo.happinessMessage();
+		
+		algo.performance();
 	}
 }
