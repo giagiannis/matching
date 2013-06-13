@@ -13,10 +13,10 @@ import java.util.Iterator;
  * @author Giannis Giannakopoulos
  *
  */
-public class StableMarriageAlgorithm extends AbstractStableMatchingAlgorithm{
+public class SMA extends AbstractStableMatchingAlgorithm{
 
 	
-	public StableMarriageAlgorithm(PersonList men, PersonList women) {
+	public SMA(PersonList men, PersonList women) {
 		super(men,women);
 	}
 	
@@ -44,7 +44,7 @@ public class StableMarriageAlgorithm extends AbstractStableMatchingAlgorithm{
 		PersonList men = reader.getPeople();
 		reader = new DatasetReader(args[1]);
 		PersonList women = reader.getPeople();
-		StableMarriageAlgorithm algo = new StableMarriageAlgorithm(men, women);
+		SMA algo = new SMA(men, women);
 		algo.run();
 		System.out.println("Number of steps:\t"+algo.getStepCounter());
 	}

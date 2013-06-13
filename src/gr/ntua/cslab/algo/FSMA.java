@@ -11,9 +11,9 @@ import java.util.Iterator;
  * @author Giannis Giannakopoulos
  *
  */
-public class FemaleStableMarriageAlgorithm extends AbstractStableMatchingAlgorithm{
+public class FSMA extends AbstractStableMatchingAlgorithm{
 
-	public FemaleStableMarriageAlgorithm(PersonList men, PersonList women) {
+	public FSMA(PersonList men, PersonList women) {
 		super(men,women);
 	}
 	
@@ -59,7 +59,7 @@ public class FemaleStableMarriageAlgorithm extends AbstractStableMatchingAlgorit
 		PersonList men = reader.getPeople();
 		reader = new DatasetReader(args[1]);
 		PersonList women = reader.getPeople();
-		AbstractStableMatchingAlgorithm algo = new FemaleStableMarriageAlgorithm(men, women);
+		AbstractStableMatchingAlgorithm algo = new FSMA(men, women);
 		algo.run();
 		System.out.println("Number of steps:\t"+algo.getStepCounter());
 	}
