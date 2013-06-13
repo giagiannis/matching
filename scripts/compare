@@ -8,9 +8,8 @@ DATASET_DIR=data
 STEP=100
 MESSAGE="<foo bar>"
 OUTPUT_DIRECTORY=output
-
-OUTPUT=$OUTPUT_DIRECTORY/"output`date \"+%y%m%d_%H%M%S\"`"
-
+OUTPUT_FILE="output`date \"+%y%m%d_%H%M%S\"`"
+OUTPUT=$OUTPUT_DIRECTORY/$OUTPUT_FILE
 
 MESSAGE="#<men> <# steps SMA> <#marriages SMA> <men rank> <women rank> <couple rank> <millis> <#steps FSMA> etc."
 
@@ -40,3 +39,7 @@ for i in `seq $1 $STEP $2`; do \
 	echo -en "\t" >> $OUTPUT;
 	echo >> $OUTPUT;
 done
+
+ln -sf ./$OUTPUT_FILE $OUTPUT_DIRECTORY/current
+
+exit
