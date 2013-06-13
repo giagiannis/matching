@@ -1,6 +1,7 @@
 package gr.ntua.cslab.algo;
 
 import gr.ntua.cslab.containers.PersonList;
+import gr.ntua.cslab.metrics.HappinessMetrics;
 
 /**
  * Abstract class used as a base for each stable matching algorithm.
@@ -11,6 +12,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 
 	protected PersonList men, women;
 	private int stepCounter;
+	protected int numberOfMarriages=0;
 	/**
 	 * Empty constructor
 	 */
@@ -74,6 +76,17 @@ public abstract class AbstractStableMatchingAlgorithm {
 			this.step();
 			this.stepCounter++;
 		}
+	}
+	
+	protected void happinessMessage(){
+		// Happiness control
+		HappinessMetrics metr = new HappinessMetrics(this.men);
+		System.out.println("Men average rank:\t"+metr.getAverageRank());
+		
+		metr = new HappinessMetrics(this.women);
+		System.out.println("Women average rank:\t"+metr.getAverageRank());
+		
+		System.out.println("Couple average rank:\t"+metr.getAverageCoupleRank());
 	}
 	
 	public int getStepCounter(){

@@ -26,11 +26,9 @@ public class SMA extends AbstractStableMatchingAlgorithm{
 		while(it.hasNext()){
 			Person man = it.next(), woman =this.women.get(man.getPreferences().getNextPreference()); 
 			if(man.propose(woman)){
-				System.out.println(man +" marries "+woman);
+				this.numberOfMarriages+=1;
 			}
 		}
-		System.out.println("Left men:\t"+men.getNumberOfSingles());
-		System.out.println("Left women:\t"+women.getNumberOfSingles());
 	}
 	
 	
@@ -47,5 +45,7 @@ public class SMA extends AbstractStableMatchingAlgorithm{
 		SMA algo = new SMA(men, women);
 		algo.run();
 		System.out.println("Number of steps:\t"+algo.getStepCounter());
+		System.out.println("Number of marriages:\t"+algo.numberOfMarriages);
+		algo.happinessMessage();
 	}
 }

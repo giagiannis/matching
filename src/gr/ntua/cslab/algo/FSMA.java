@@ -30,11 +30,9 @@ public class FSMA extends AbstractStableMatchingAlgorithm{
 		while(it.hasNext()){
 			Person man = it.next(), woman =this.women.get(man.getPreferences().getNextPreference()); 
 			if(man.propose(woman)){
-				System.out.println(man +" marries "+woman);
+				this.numberOfMarriages+=1;
 			}
 		}
-		System.out.println("Left men:\t"+men.getNumberOfSingles());
-		System.out.println("Left women:\t"+women.getNumberOfSingles());
 	}
 	
 	public void womenProposeStep(){
@@ -42,11 +40,9 @@ public class FSMA extends AbstractStableMatchingAlgorithm{
 		while(it.hasNext()){
 			Person woman = it.next(), man =this.men.get(woman.getPreferences().getNextPreference()); 
 			if(woman.propose(man)){
-				System.out.println(man +" marries "+woman);
+				this.numberOfMarriages+=1;
 			}
 		}
-		System.out.println("Left men:\t"+men.getNumberOfSingles());
-		System.out.println("Left women:\t"+women.getNumberOfSingles());
 	}
 	
 	public static void main(String[] args) {
@@ -62,6 +58,8 @@ public class FSMA extends AbstractStableMatchingAlgorithm{
 		AbstractStableMatchingAlgorithm algo = new FSMA(men, women);
 		algo.run();
 		System.out.println("Number of steps:\t"+algo.getStepCounter());
+		System.out.println("Number of marriages:\t"+algo.numberOfMarriages);
+		algo.happinessMessage();
 	}
 
 	
