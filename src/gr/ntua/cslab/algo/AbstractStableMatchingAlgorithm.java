@@ -74,7 +74,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 	public void run() {
 		long start=System.currentTimeMillis();
 		this.stepCounter=0;
-		while(this.men.hasSinglePeople()){
+		while(this.men.hasSinglePeople() || this.women.hasSinglePeople()){
 			this.step();
 			this.stepCounter++;
 		}
