@@ -19,4 +19,5 @@ done
 # step used to pack every image to a single pdf file 
 # comment it out if you need the separate images
 
-convert $PICS_DIR* $PICS_DIR/graphs_`date "+%y%m%d_%H%M%S"`.pdf
+convert $PICS_DIR*.png $PICS_DIR/graphs_`date "+%y%m%d_%H%M%S"`.pdf
+rm $PICS_DIR/*.png
