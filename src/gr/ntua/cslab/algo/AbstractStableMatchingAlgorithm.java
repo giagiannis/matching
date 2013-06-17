@@ -1,6 +1,7 @@
 package gr.ntua.cslab.algo;
 
 import gr.ntua.cslab.containers.PersonList;
+import gr.ntua.cslab.metrics.GenderInequalityMetric;
 import gr.ntua.cslab.metrics.HappinessMetrics;
 
 /**
@@ -92,11 +93,16 @@ public abstract class AbstractStableMatchingAlgorithm {
 		System.out.print(this.numberOfMarriages+"\t");
 		
 		HappinessMetrics metr = new HappinessMetrics(this.men);
-		System.out.format("%.2f\t",metr.getAverageRank());
+		System.out.format("%.4f\t",metr.getAverageRank());
 		
 		metr = new HappinessMetrics(this.women);
-		System.out.format("%.2f\t",metr.getAverageRank());
-		System.out.format("%.2f\t",metr.getAverageCoupleRank());
+		System.out.format("%.4f\t",metr.getAverageRank());
+		System.out.format("%.4f\t",metr.getAverageCoupleRank());
+		
+		GenderInequalityMetric ineqMetr = new GenderInequalityMetric(this.men, this.women);
+		System.out.format("%.4f\t", ineqMetr.getMenHappinessPercentage());
+		System.out.format("%.4f\t", ineqMetr.getWomenHappinessPercentage());
+		System.out.format("%.4f\t", ineqMetr.getInequalityMetric());
 		
 		System.out.format("%d",this.execDuration);
 	}
