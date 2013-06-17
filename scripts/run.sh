@@ -5,18 +5,21 @@
 # where are the datasets located
 if [ -z "$DATASET_DIR" ]; then
 	DATASET_DIR=data;
+	echo "Default dataset directory used: $DATASET_DIR"
 fi
 
 # step to used at loop
 if [ -z "$STEP" ]; then
 	STEP=100;
+	echo "Default step used: $STEP"
 fi
 
 OUTPUT_DIRECTORY=output
 OUTPUT_FILE="output`date \"+%y%m%d_%H%M%S\"`.txt"
 OUTPUT=$OUTPUT_DIRECTORY/$OUTPUT_FILE
 
-MESSAGE="#<men> <# steps SMA> <#marriages SMA> <men rank> <women rank> <couple rank> <millis> <#steps ESMA> etc."
+MESSAGE="#<men> <#steps SMA> <#marriages SMA> <men rank> <women rank> <couple rank> <men happiness> <women happiness> <inequ metrics> <exec millis> \
+		<#steps ESMA> <#marriages ESMA> etc."
 
 echo $MESSAGE > $OUTPUT
 

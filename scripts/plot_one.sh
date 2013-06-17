@@ -13,9 +13,9 @@ fi
 
 PICTURE_PATH="$2pic$1.png";
 
-SEC_COL=$[6+$1];
+SEC_COL=$[9+$1];
 
-GNUPLOT_COMMAND="set grid; set terminal png size 1024,768; set output '$PICTURE_PATH';";
+GNUPLOT_COMMAND="set grid; set terminal png size 1440,900; set output '$PICTURE_PATH';";
 
 
 if [ -z "$PLOT_TITLE" ]; then
@@ -24,7 +24,7 @@ else
 	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"set title  '$PLOT_TITLE vs Dataset size'; set xlabel 'Dataset size'; set ylabel '$PLOT_TITLE'; ";
 fi
 
-
+echo "Creating plot with cols $1, $SEC_COL";
 GNUPLOT_COMMAND=$GNUPLOT_COMMAND"plot 	'$OUTPUT_FILE' using 1:$1 with lines title 'SMA',\
 			'$OUTPUT_FILE' using 1:$SEC_COL with lines title 'ESMA'";
 gnuplot -p -e  "$GNUPLOT_COMMAND";
