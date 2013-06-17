@@ -3,12 +3,17 @@
 # the expected arguments are: start dataset size and stop dataset size
 
 # where are the datasets located
-DATASET_DIR=data
+if [ -z "$DATASET_DIR" ]; then
+	DATASET_DIR=data;
+fi
+
 # step to used at loop
-STEP=100
-MESSAGE="<foo bar>"
+if [ -z "$STEP" ]; then
+	STEP=100;
+fi
+
 OUTPUT_DIRECTORY=output
-OUTPUT_FILE="output`date \"+%y%m%d_%H%M%S\"`"
+OUTPUT_FILE="output`date \"+%y%m%d_%H%M%S\"`.txt"
 OUTPUT=$OUTPUT_DIRECTORY/$OUTPUT_FILE
 
 MESSAGE="#<men> <# steps SMA> <#marriages SMA> <men rank> <women rank> <couple rank> <millis> <#steps ESMA> etc."
