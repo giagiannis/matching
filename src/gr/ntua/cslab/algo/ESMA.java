@@ -5,6 +5,7 @@ import gr.ntua.cslab.containers.PersonList;
 import gr.ntua.cslab.data.DatasetReader;
 
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Implementation of a female-friendly algorithm, based on Shapley-Roth algorithm.
@@ -13,16 +14,23 @@ import java.util.Iterator;
  */
 public class ESMA extends AbstractStableMatchingAlgorithm{
 
+	private Random random;
+//	private int menSteps;
+	
 	public ESMA(PersonList men, PersonList women) {
 		super(men,women);
+		this.random=new Random();
+//		this.menSteps=0;
 	}
 	
 	@Override
 	public void step() {
-		if(this.getStepCounter()%2==0)
+		if(this.random.nextBoolean()){
 			this.menProposeStep();
-		else
+//			this.menSteps++;
+		} else {
 			this.womenProposeStep();
+		}
 	}
 	
 	public void menProposeStep(){
@@ -55,10 +63,12 @@ public class ESMA extends AbstractStableMatchingAlgorithm{
 		PersonList men = reader.getPeople();
 		reader = new DatasetReader(args[1]);
 		PersonList women = reader.getPeople();
-		AbstractStableMatchingAlgorithm algo = new ESMA(men, women);
+		ESMA algo = new ESMA(men, women);
 		algo.run();
 
 		algo.performance();
+//		System.err.println("\nMen steps:"+algo.menSteps);
+//		System.err.println("Women steps:"+(algo.getStepCounter()-algo.menSteps));
 	}
 
 	
