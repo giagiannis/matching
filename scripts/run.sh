@@ -1,5 +1,5 @@
 #!/bin/bash
-# script used to compare the algorithms SMA and FSMA
+# script used to compare the algorithms SMA and ESMA
 # the expected arguments are: start dataset size and stop dataset size
 
 # where are the datasets located
@@ -11,7 +11,7 @@ OUTPUT_DIRECTORY=output
 OUTPUT_FILE="output`date \"+%y%m%d_%H%M%S\"`"
 OUTPUT=$OUTPUT_DIRECTORY/$OUTPUT_FILE
 
-MESSAGE="#<men> <# steps SMA> <#marriages SMA> <men rank> <women rank> <couple rank> <millis> <#steps FSMA> etc."
+MESSAGE="#<men> <# steps SMA> <#marriages SMA> <men rank> <women rank> <couple rank> <millis> <#steps ESMA> etc."
 
 echo $MESSAGE > $OUTPUT
 
@@ -33,7 +33,7 @@ for i in `seq $1 $STEP $2`; do \
 	$EXEC >> $OUTPUT;
 	echo -en "\t" >> $OUTPUT;
 
-	EXEC="java -cp pack.jar gr.ntua.cslab.algo.FSMA $MEN $WOMEN";
+	EXEC="java -cp pack.jar gr.ntua.cslab.algo.ESMA $MEN $WOMEN";
 	echo $EXEC;
 	$EXEC >> $OUTPUT;
 	echo -en "\t" >> $OUTPUT;

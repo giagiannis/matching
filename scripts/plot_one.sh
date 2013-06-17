@@ -26,7 +26,7 @@ fi
 
 
 GNUPLOT_COMMAND=$GNUPLOT_COMMAND"plot 	'$OUTPUT_FILE' using 1:$1 with lines title 'SMA',\
-			'$OUTPUT_FILE' using 1:$SEC_COL with lines title 'FSMA'";
+			'$OUTPUT_FILE' using 1:$SEC_COL with lines title 'ESMA'";
 gnuplot -p -e  "$GNUPLOT_COMMAND";
 
 

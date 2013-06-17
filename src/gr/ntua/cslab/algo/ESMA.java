@@ -11,9 +11,9 @@ import java.util.Iterator;
  * @author Giannis Giannakopoulos
  *
  */
-public class FSMA extends AbstractStableMatchingAlgorithm{
+public class ESMA extends AbstractStableMatchingAlgorithm{
 
-	public FSMA(PersonList men, PersonList women) {
+	public ESMA(PersonList men, PersonList women) {
 		super(men,women);
 	}
 	
@@ -55,7 +55,7 @@ public class FSMA extends AbstractStableMatchingAlgorithm{
 		PersonList men = reader.getPeople();
 		reader = new DatasetReader(args[1]);
 		PersonList women = reader.getPeople();
-		AbstractStableMatchingAlgorithm algo = new FSMA(men, women);
+		AbstractStableMatchingAlgorithm algo = new ESMA(men, women);
 		algo.run();
 
 		algo.performance();
