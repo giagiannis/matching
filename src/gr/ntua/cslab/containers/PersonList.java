@@ -90,6 +90,35 @@ public class PersonList {
 		return this.getNumberOfSingles()>0;
 	}
 	
+	/**
+	 * Returns all the partners ranks (according to the people contained in PersonList) as an array.
+	 * @return
+	 */
+	public int[] getRanksArray(){
+		int[] sort = new int[this.size()];
+		Iterator<Person> it = this.getIterator();
+		int i=0;
+		while(it.hasNext())
+			sort[i++]=it.next().getCurrentPartnerRank();
+		return sort;
+	}
+	
+	/**
+	 * Returns the number of satisfied people, given a satisfaction threshold. This threshold
+	 * is expressed as a rank (refering to the partner): if the rank is below average 
+	 * @param satisfactionThreshold
+	 * @return
+	 */
+	public int getSatisfiedPeople(int satisfactionThreshold){
+		Iterator<Person> it = this.getIterator();
+		int count=0;
+		while(it.hasNext()){
+			if(it.next().getCurrentPartnerRank()<satisfactionThreshold)
+				count+=1;
+		}
+		return count;
+	}
+	
 	@Override
 	public String toString() {
 		String buffer="[";
