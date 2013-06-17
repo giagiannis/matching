@@ -3,7 +3,6 @@ package gr.ntua.cslab.metrics;
 import java.util.Arrays;
 
 import gr.ntua.cslab.containers.PersonList;
-import gr.ntua.cslab.data.DatasetReader;
 
 /**
  * Class used to express gender inequality metric. 
