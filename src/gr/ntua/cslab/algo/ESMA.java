@@ -5,7 +5,6 @@ import gr.ntua.cslab.containers.PersonList;
 import gr.ntua.cslab.data.DatasetReader;
 
 import java.util.Iterator;
-import java.util.Random;
 
 /**
  * Implementation of a female-friendly algorithm, based on Shapley-Roth algorithm.
@@ -14,18 +13,19 @@ import java.util.Random;
  */
 public class ESMA extends AbstractStableMatchingAlgorithm{
 
-	private Random random;
+//	private Random random;
 //	private int menSteps;
 	
 	public ESMA(PersonList men, PersonList women) {
 		super(men,women);
-		this.random=new Random();
+//		this.random=new Random();
 //		this.menSteps=0;
 	}
 	
 	@Override
 	public void step() {
-		if(this.random.nextBoolean()){
+//		if(this.random.nextBoolean()){
+		if(this.getStepCounter()%2==0){
 			this.menProposeStep();
 //			this.menSteps++;
 		} else {
@@ -34,7 +34,8 @@ public class ESMA extends AbstractStableMatchingAlgorithm{
 	}
 	
 	public void menProposeStep(){
-		Iterator<Person> it = this.men.getSinglePersonIterator();
+//		Iterator<Person> it = this.men.getSinglePersonIterator();
+		Iterator<Person> it = this.men.getMotivatedToBreakUpIterator();
 		while(it.hasNext()){
 			Person man = it.next(), woman =this.women.get(man.getPreferences().getNextPreference()); 
 			if(man.propose(woman)){
@@ -44,7 +45,8 @@ public class ESMA extends AbstractStableMatchingAlgorithm{
 	}
 	
 	public void womenProposeStep(){
-		Iterator<Person> it = this.women.getSinglePersonIterator();
+//		Iterator<Person> it = this.women.getSinglePersonIterator();
+		Iterator<Person> it = this.women.getMotivatedToBreakUpIterator();
 		while(it.hasNext()){
 			Person woman = it.next(), man =this.men.get(woman.getPreferences().getNextPreference()); 
 			if(woman.propose(man)){

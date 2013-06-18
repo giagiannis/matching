@@ -22,7 +22,8 @@ public class SMA extends AbstractStableMatchingAlgorithm{
 	
 	
 	public void step(){
-		Iterator<Person> it = this.men.getSinglePersonIterator();
+//		Iterator<Person> it = this.men.getSinglePersonIterator();
+		Iterator<Person> it = this.men.getMotivatedToBreakUpIterator();
 		while(it.hasNext()){
 			Person man = it.next(), woman =this.women.get(man.getPreferences().getNextPreference()); 
 			if(man.propose(woman)){
