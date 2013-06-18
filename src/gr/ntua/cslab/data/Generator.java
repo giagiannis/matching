@@ -2,8 +2,9 @@ package gr.ntua.cslab.data;
 
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.LinkedList;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Class used to create datasets. The class will create text files containing person's preferences
@@ -51,15 +52,14 @@ public class Generator {
 	}
 	
 	private String line(){
-		LinkedList<String> ordered = new LinkedList<String>();
+		String buffer="";
+		List<String> ordered = new ArrayList<String>();
 		for(Integer i=1;i<this.datasetSize+1;i++)
 			ordered.add(i.toString());
-		Random rand = new Random();
-		
-		String buffer="";
-		while(!ordered.isEmpty())
-			buffer+=ordered.remove(rand.nextInt(ordered.size()))+" ";
-		buffer=buffer.substring(0, buffer.length()-1);
+		Collections.shuffle(ordered);
+		for(String d:ordered)
+			this.out.print(d+" ");
+		this.out.println();
 		return buffer;
 	}
 	
@@ -69,7 +69,7 @@ public class Generator {
 	public void create(){
 		this.out.println(this.datasetSize);
 		for(int i=0;i<this.datasetSize;i++)
-			this.out.println(this.line());
+			this.line();
 		this.out.close();
 	}
 	
@@ -84,6 +84,10 @@ public class Generator {
 		if(args.length>1)
 			gen.setOutputFile(args[1]);
 		gen.create();
+//		gen.myLine();
+//		Generator gen = new Generator();
+//		gen.setDatasetSize(new Integer(args[0]));
+//		gen.lineWithSet();
 		
 	}
 
