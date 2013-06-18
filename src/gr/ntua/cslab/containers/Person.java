@@ -103,6 +103,15 @@ public class Person {
 		}
 	}
 	
+	/**
+	 * Returns true if the current person prefers another person more to their current partner. 
+	 * The method returns true if the the current person is not married.
+	 * @return
+	 */
+	public boolean isMotivatedToBreakUp(){
+		return ((!this.isMarried()) || (this.preferences.getNextPreferenceRank()<this.getCurrentPartnerRank()));
+	}
+	
 	@Override
 	public String toString() {
 		String buffer="";
