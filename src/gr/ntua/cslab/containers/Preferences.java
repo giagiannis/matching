@@ -91,6 +91,19 @@ public class Preferences {
 	public int getRank(int id){
 		return this.preferencesOrderedById[id-1];
 	}
+
+	/**
+	 * Returns the rank of the person's next preference. IMPORTANT: this method
+	 * does not have the same effect as the {@link Preferences#getNextPreference()} method,
+	 * as this method does not proceed to the next preference of the person.
+	 * @return
+	 */
+	public int getNextPreferenceRank(){
+		if(this.index>=this.preferencesOrderedByRank.length)
+			return Preferences.DO_NOT_EXIST;
+		else
+			return this.index+1;
+	}
 	
 	@Override
 	public String toString() {
