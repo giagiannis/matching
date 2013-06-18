@@ -14,6 +14,13 @@ if [ -z "$STEP" ]; then
 	echo "Default step used: $STEP"
 fi
 
+# jvm variables 
+if [ -z "$JVM_FLAGS" ]; then
+	JVM_FLAGS="-Xmx2g";
+	echo "Default JVM flags: $JVM_FLAGS"
+fi
+
+
 OUTPUT_DIRECTORY=output
 OUTPUT_FILE="output`date \"+%y%m%d_%H%M%S\"`.txt"
 OUTPUT=$OUTPUT_DIRECTORY/$OUTPUT_FILE
@@ -36,12 +43,12 @@ for i in `seq $1 $STEP $2`; do \
 	# run iteration
 	echo -ne "$i\t" >> $OUTPUT;
 
-	EXEC="java -cp pack.jar gr.ntua.cslab.algo.SMA $MEN $WOMEN";
+	EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algo.SMA $MEN $WOMEN";
 	echo $EXEC;
 	$EXEC >> $OUTPUT;
 	echo -en "\t" >> $OUTPUT;
 
-	EXEC="java -cp pack.jar gr.ntua.cslab.algo.ESMA $MEN $WOMEN";
+	EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algo.ESMA $MEN $WOMEN";
 	echo $EXEC;
 	$EXEC >> $OUTPUT;
 	echo -en "\t" >> $OUTPUT;
