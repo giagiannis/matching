@@ -68,6 +68,10 @@ public class PersonList {
 		return new FreePersonIterator(this);
 	}
 	
+	public Iterator<Person> getMotivatedToBreakUpIterator(){
+		return new MotivatedToBreakUpIterator(this);
+	}
+	
 	/**
 	 * Returns the number of single people on the list
 	 * @return
