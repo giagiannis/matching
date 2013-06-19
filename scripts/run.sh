@@ -25,8 +25,8 @@ OUTPUT_DIRECTORY=output
 OUTPUT_FILE="output`date \"+%y%m%d_%H%M%S\"`.txt"
 OUTPUT=$OUTPUT_DIRECTORY/$OUTPUT_FILE
 
-MESSAGE="#<men> <#steps SMA> <#marriages SMA> <men rank> <women rank> <couple rank> <men happiness> <women happiness> <inequ metrics> <exec millis> \
-		<#steps ESMA> <#marriages ESMA> etc."
+MESSAGE="#<men> <#steps SMA> <#marriages SMA> <exec duration SMA> <regret cost> <egalitarian cost> <sex equalness cost> <gender inequality costSMA>\n"
+MESSAGE=$MESSAGE"#each of the described costs are provided for each algorithms next to each other"
 
 echo $MESSAGE > $OUTPUT
 
@@ -42,16 +42,13 @@ for i in `seq $1 $STEP $2`; do \
 	
 	# run iteration
 	echo -ne "$i\t" >> $OUTPUT;
-
-	EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algo.SMA $MEN $WOMEN";
-	echo $EXEC;
-	$EXEC >> $OUTPUT;
-	echo -en "\t" >> $OUTPUT;
-
-	EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algo.ESMA $MEN $WOMEN";
-	echo $EXEC;
-	$EXEC >> $OUTPUT;
-	echo -en "\t" >> $OUTPUT;
+	for ALGO in SMA ESMA RESMA AAESMA; do
+		EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algo.$ALGO $MEN $WOMEN";
+		echo $EXEC;
+		$EXEC >> $OUTPUT;
+		echo -en "\t" >> $OUTPUT;
+	done
+	
 	echo >> $OUTPUT;
 done
 

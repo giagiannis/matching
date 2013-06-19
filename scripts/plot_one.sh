@@ -3,6 +3,13 @@
 # first argument is necessary and it point to the column that will be depicted
 # second argument is used to point to the output path
 
+LABEL[1]='SMA';
+LABEL[2]='ESMA';
+LABEL[3]='RESMA';
+LABEL[4]='AAESMA';
+
+COLUMNS_PER_PLOT=7;
+
 if [ $# -lt 1 ]; then
 	echo "Expect number of column to print";
 	exit;
@@ -13,20 +20,26 @@ fi
 
 PICTURE_PATH="$2pic$1.png";
 
-SEC_COL=$[9+$1];
 
 GNUPLOT_COMMAND="set grid; set terminal png size 1440,900; set output '$PICTURE_PATH';";
 
 
 if [ -z "$PLOT_TITLE" ]; then
-	GNUPLOT_COMMAND=$GNUPLOT_COMMAND;
+	GNUPLOT_COMMAND=$GNUPLOT_COMMAND" plot ";
 else
-	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"set title  '$PLOT_TITLE vs Dataset size'; set xlabel 'Dataset size'; set ylabel '$PLOT_TITLE'; ";
+	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"set title  '$PLOT_TITLE vs Dataset size'; set xlabel 'Dataset size'; set ylabel '$PLOT_TITLE'; plot ";
 fi
 
-echo "Creating plot with cols $1, $SEC_COL";
-GNUPLOT_COMMAND=$GNUPLOT_COMMAND"plot 	'$OUTPUT_FILE' using 1:$1 with lines title 'SMA',\
-			'$OUTPUT_FILE' using 1:$SEC_COL with lines title 'ESMA'";
+echo -en "Creating plot with cols ";
+for i in `seq 1 4`; do
+	COL=$[$[$i-1]*7+$1];
+	echo -n $COL" "
+	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"'$OUTPUT_FILE' using 1:$COL with lines title '${LABEL[$i]}'";
+	if [ $i -lt 4 ]; then 
+		GNUPLOT_COMMAND=$GNUPLOT_COMMAND", "	
+	fi
+done
+echo 
 gnuplot -p -e  "$GNUPLOT_COMMAND";
 
 
