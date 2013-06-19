@@ -10,8 +10,7 @@ import gr.ntua.cslab.containers.PersonList;
  *
  */
 public class GenderInequalityCost extends AbstractCost{
-
-	private PersonList men, women;
+	
 	private int median=-1;
 	
 	/**
