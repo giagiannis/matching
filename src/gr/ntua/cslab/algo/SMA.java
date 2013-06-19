@@ -1,10 +1,7 @@
 package gr.ntua.cslab.algo;
 
-import gr.ntua.cslab.containers.Person;
 import gr.ntua.cslab.containers.PersonList;
 import gr.ntua.cslab.data.DatasetReader;
-
-import java.util.Iterator;
 
 /**
  * This class implements the classic algorithm which solves the Stable Marriage Problem proposed by Shapley and Roth.
@@ -20,18 +17,13 @@ public class SMA extends AbstractStableMatchingAlgorithm{
 		super(men,women);
 	}
 	
-	
-	public void step(){
-//		Iterator<Person> it = this.men.getSinglePersonIterator();
-		Iterator<Person> it = this.men.getMotivatedToBreakUpIterator();
-		while(it.hasNext()){
-			Person man = it.next(), woman =this.women.get(man.getPreferences().getNextPreference()); 
-			if(man.propose(woman)){
-				this.numberOfMarriages+=1;
-			}
-		}
-	}
-	
+	/**
+	 * Returns true (in the classic algorithm men are always the proposers and women are the acceptors.
+	 */
+	@Override
+	protected boolean menPropose() {
+		return true;
+	}	
 	
 	public static void main(String[] args) {
 		if(args.length<2){
@@ -43,7 +35,7 @@ public class SMA extends AbstractStableMatchingAlgorithm{
 		PersonList men = reader.getPeople();
 		reader = new DatasetReader(args[1]);
 		PersonList women = reader.getPeople();
-		SMA algo = new SMA(men, women);
+		AbstractStableMatchingAlgorithm algo = new SMA(men, women);
 		algo.run();
 		
 		algo.performance();

@@ -1,10 +1,7 @@
 package gr.ntua.cslab.algo;
 
-import gr.ntua.cslab.containers.Person;
 import gr.ntua.cslab.containers.PersonList;
 import gr.ntua.cslab.data.DatasetReader;
-
-import java.util.Iterator;
 
 /**
  * Implementation of a female-friendly algorithm, based on Shapley-Roth algorithm.
@@ -12,47 +9,20 @@ import java.util.Iterator;
  *
  */
 public class ESMA extends AbstractStableMatchingAlgorithm{
-
-//	private Random random;
-//	private int menSteps;
 	
 	public ESMA(PersonList men, PersonList women) {
 		super(men,women);
-//		this.random=new Random();
-//		this.menSteps=0;
 	}
 	
+	/**
+	 * This method returns true if the current step count is even, and false if it is odd.
+	 */
 	@Override
-	public void step() {
-//		if(this.random.nextBoolean()){
-		if(this.getStepCounter()%2==0){
-			this.menProposeStep();
-//			this.menSteps++;
-		} else {
-			this.womenProposeStep();
-		}
-	}
-	
-	public void menProposeStep(){
-//		Iterator<Person> it = this.men.getSinglePersonIterator();
-		Iterator<Person> it = this.men.getMotivatedToBreakUpIterator();
-		while(it.hasNext()){
-			Person man = it.next(), woman =this.women.get(man.getPreferences().getNextPreference()); 
-			if(man.propose(woman)){
-				this.numberOfMarriages+=1;
-			}
-		}
-	}
-	
-	public void womenProposeStep(){
-//		Iterator<Person> it = this.women.getSinglePersonIterator();
-		Iterator<Person> it = this.women.getMotivatedToBreakUpIterator();
-		while(it.hasNext()){
-			Person woman = it.next(), man =this.men.get(woman.getPreferences().getNextPreference()); 
-			if(woman.propose(man)){
-				this.numberOfMarriages+=1;
-			}
-		}
+	protected boolean menPropose() {
+		if(this.getStepCounter()%2==0)
+			return true;
+		else
+			return false;
 	}
 	
 	public static void main(String[] args) {
@@ -65,13 +35,9 @@ public class ESMA extends AbstractStableMatchingAlgorithm{
 		PersonList men = reader.getPeople();
 		reader = new DatasetReader(args[1]);
 		PersonList women = reader.getPeople();
-		ESMA algo = new ESMA(men, women);
+		AbstractStableMatchingAlgorithm algo = new ESMA(men, women);
 		algo.run();
 
 		algo.performance();
-//		System.err.println("\nMen steps:"+algo.menSteps);
-//		System.err.println("Women steps:"+(algo.getStepCounter()-algo.menSteps));
 	}
-
-	
 }

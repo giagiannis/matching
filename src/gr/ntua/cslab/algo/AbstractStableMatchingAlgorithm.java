@@ -1,8 +1,14 @@
 package gr.ntua.cslab.algo;
 
+import java.util.Iterator;
+
+import gr.ntua.cslab.containers.Person;
 import gr.ntua.cslab.containers.PersonList;
-import gr.ntua.cslab.metrics.GenderInequalityMetric;
-import gr.ntua.cslab.metrics.HappinessMetrics;
+import gr.ntua.cslab.metrics.AbstractCost;
+import gr.ntua.cslab.metrics.EgalitarianCost;
+import gr.ntua.cslab.metrics.GenderInequalityCost;
+import gr.ntua.cslab.metrics.RegretCost;
+import gr.ntua.cslab.metrics.SexEqualnessCost;
 
 /**
  * Abstract class used as a base for each stable matching algorithm.
@@ -67,7 +73,20 @@ public abstract class AbstractStableMatchingAlgorithm {
 	/**
 	 * Abstract method implemented separately be each algorithm
 	 */
-	public abstract void step();
+	public void step() {
+		if(this.menPropose())
+			this.proposeStep(this.men);
+		else
+			this.proposeStep(this.women);
+	}
+	
+	/**
+	 * This method will be used to determine which side will be the proposer and which will be the acceptors.
+	 * If the method returns true, then men will be the proposers, else women will propose. The method
+	 * must be implemented separately be any subclass.
+	 * @return
+	 */
+	protected abstract boolean menPropose();
 	
 	/**
 	 * Default running method: while there exist single people, marry them
@@ -89,25 +108,45 @@ public abstract class AbstractStableMatchingAlgorithm {
 	 */
 	protected void performance(){
 		// Happiness control
-		System.out.print(this.stepCounter+"\t");
-		System.out.print(this.numberOfMarriages+"\t");
+		System.out.format("%d\t",this.stepCounter);
+		System.out.format("%d\t",this.numberOfMarriages);
+		System.out.format("%d\t",this.execDuration);
 		
-		HappinessMetrics metr = new HappinessMetrics(this.men);
-		System.out.format("%.4f\t",metr.getAverageRank());
-		
-		metr = new HappinessMetrics(this.women);
-		System.out.format("%.4f\t",metr.getAverageRank());
-		System.out.format("%.4f\t",metr.getAverageCoupleRank());
-		
-		GenderInequalityMetric ineqMetr = new GenderInequalityMetric(this.men, this.women);
-		System.out.format("%.4f\t", ineqMetr.getMenHappinessPercentage());
-		System.out.format("%.4f\t", ineqMetr.getWomenHappinessPercentage());
-		System.out.format("%.4f\t", ineqMetr.getInequalityMetric());
-		
-		System.out.format("%d",this.execDuration);
+		AbstractCost cost = new RegretCost(this.men, this.women);
+		System.out.format("%.4f\t",cost.get());
+		cost = new EgalitarianCost(this.men, this.women);
+		System.out.format("%.4f\t",cost.get());
+		cost = new SexEqualnessCost(this.men, this.women);
+		System.out.format("%.4f\t",cost.get());
+		cost = new GenderInequalityCost(this.men, this.women);
+		System.out.format("%.4f",cost.get());
 	}
 	
+	/**
+	 * Returns the current step.
+	 * @return
+	 */
 	public int getStepCounter(){
 		return this.stepCounter;
+	}
+	
+	/**
+	 * This method is executing a full loop of proposals. The proposers who are motivated to break
+	 * up propose to the acceptors who then evaluate the proposals and accept or reject their offers.
+	 * @param proposers
+	 */
+	protected void proposeStep(PersonList proposers){
+		PersonList acceptors;
+		if(proposers==this.men)
+			acceptors=this.women;
+		else
+			acceptors=this.men;
+		Iterator<Person> it = proposers.getMotivatedToBreakUpIterator();
+		while(it.hasNext()){
+			Person man = it.next(), woman =acceptors.get(man.getPreferences().getNextPreference()); 
+			if(man.propose(woman)){
+				this.numberOfMarriages+=1;
+			}
+		}
 	}
 }
