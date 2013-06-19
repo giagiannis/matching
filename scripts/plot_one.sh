@@ -15,7 +15,7 @@ if [ $# -lt 1 ]; then
 	exit;
 fi
 if [ -z "$OUTPUT_FILE" ]; then
-	OUTPUT_FILE=`find ../ -name current`
+	OUTPUT_FILE="output/current"
 fi
 
 PICTURE_PATH="$2pic$1.png";
