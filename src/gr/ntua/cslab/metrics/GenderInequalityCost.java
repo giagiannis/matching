@@ -9,7 +9,7 @@ import gr.ntua.cslab.containers.PersonList;
  * @author Giannis Giannakopoulos
  *
  */
-public class GenderInequalityMetric {
+public class GenderInequalityCost extends AbstractCost{
 
 	private PersonList men, women;
 	private int median=-1;
@@ -19,9 +19,8 @@ public class GenderInequalityMetric {
 	 * @param men
 	 * @param women
 	 */
-	public GenderInequalityMetric(PersonList men, PersonList women) {
-		this.men=men;
-		this.women=women;
+	public GenderInequalityCost(PersonList men, PersonList women) {
+		super(men,women);
 	}
 	
 	/**
@@ -29,8 +28,9 @@ public class GenderInequalityMetric {
 	 * him with a higher rank than the average rank) minus the percentage of happy women
 	 * @return
 	 */
-	public double getInequalityMetric(){
-		return this.getMenHappinessPercentage()-this.getWomenHappinessPercentage();
+	@Override
+	public double get(){
+		return this.getMenHappinessCount()-this.getWomenHappinessCount();
 	}
 	
 	/**
@@ -38,17 +38,17 @@ public class GenderInequalityMetric {
 	 * average rank of all people)
 	 * @return
 	 */
-	public double getMenHappinessPercentage(){
-		return this.men.getSatisfiedPeople(this.getGlobalRankMedian())/(1.0*this.men.size());
+	public double getMenHappinessCount(){
+		return this.men.getSatisfiedPeople(this.getGlobalRankMedian());
 	}
 	
 	/**
 	 * Returns the percentage of happy women (defined as happy men)<br/>
-	 * See also:{@link #getMenHappinessPercentage()}
+	 * See also:{@link #getMenHappinessCount()}
 	 * @return
 	 */
-	public double getWomenHappinessPercentage(){
-		return this.women.getSatisfiedPeople(this.getGlobalRankMedian())/(1.0*this.women.size());
+	public double getWomenHappinessCount(){
+		return this.women.getSatisfiedPeople(this.getGlobalRankMedian());
 	}
 	
 	private int getGlobalRankMedian(){
