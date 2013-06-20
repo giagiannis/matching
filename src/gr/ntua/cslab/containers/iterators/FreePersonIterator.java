@@ -5,7 +5,7 @@ import gr.ntua.cslab.containers.PersonList;
 
 import java.util.Iterator;
 
-class FreePersonIterator implements Iterator<Person>{
+public class FreePersonIterator implements Iterator<Person>{
 
 	private int id=0;
 	private PersonList list;
