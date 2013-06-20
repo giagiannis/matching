@@ -150,7 +150,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 //		}
 		while(it.hasNext()){
 			Person proposer = it.next();
-			Person acceptor=acceptors.get(proposer.getPreferences().getNextPreference());
+			Person acceptor=acceptors.get(proposer.getPreferences().getNext());
 			proposer.offer(acceptor);
 		}
 		it = acceptors.getIterator();

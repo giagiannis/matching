@@ -1,4 +1,4 @@
-package gr.ntua.cslab.containers;
+package gr.ntua.cslab.containers.preferences;
 
 /**
  * Preferences object holds the preferences of a man or woman. A number of methods are provided to set and get
@@ -6,9 +6,8 @@ package gr.ntua.cslab.containers;
  * @author Giannis Giannakopoulos
  *
  */
-public class Preferences {
-
-	private static final int DO_NOT_EXIST = -1;
+public class InMemoryPreferences implements Preferences {
+	
 	private int[] preferencesOrderedByRank;
 	private int[] preferencesOrderedById;
 	private int index=0;
@@ -16,7 +15,7 @@ public class Preferences {
 	/**
 	 * Empty constructor (does nothing).
 	 */
-	public Preferences() {
+	public InMemoryPreferences() {
 		
 	}
 	
@@ -25,7 +24,7 @@ public class Preferences {
 	 * @param preferences the preferences (sorted by ranking or id)
 	 * @param orderedByRank true if the ordering is based on rank or false if it is based on id
 	 */
-	public Preferences(int[] preferences, boolean orderedByRank){
+	public InMemoryPreferences(int[] preferences, boolean orderedByRank){
 		if(orderedByRank)
 			this.setPreferencesOrderedByRank(preferences);
 		else
@@ -68,9 +67,9 @@ public class Preferences {
 	 * Returns the next preference (ordered by rank)
 	 * @return
 	 */
-	public int getNextPreference(){
+	public int getNext(){
 		if(this.index>=this.preferencesOrderedByRank.length)
-			return Preferences.DO_NOT_EXIST;
+			return InMemoryPreferences.NO_PREFERENCE;
 		else
 			return this.preferencesOrderedByRank[this.index++];
 	}
@@ -79,7 +78,7 @@ public class Preferences {
 	 * True if there are more preferences, false if there are not.
 	 * @return
 	 */
-	public boolean hasPreferencesLeft(){
+	public boolean hasMore(){
 		return this.index<this.preferencesOrderedByRank.length;
 	}
 	
@@ -94,13 +93,13 @@ public class Preferences {
 
 	/**
 	 * Returns the rank of the person's next preference. IMPORTANT: this method
-	 * does not have the same effect as the {@link Preferences#getNextPreference()} method,
+	 * does not have the same effect as the {@link InMemoryPreferences#getNext()} method,
 	 * as this method does not proceed to the next preference of the person.
 	 * @return
 	 */
-	public int getNextPreferenceRank(){
+	public int getNextRank(){
 		if(this.index>=this.preferencesOrderedByRank.length)
-			return Preferences.DO_NOT_EXIST;
+			return InMemoryPreferences.NO_PREFERENCE;
 		else
 			return this.index+1;
 	}
@@ -119,8 +118,8 @@ public class Preferences {
 	
 	public static void main(String[] args) {
 		int[] foo = {1,5,4,2,3};
-		Preferences pref = new Preferences(foo, true);
-		while(pref.hasPreferencesLeft())
-			System.out.println(pref.getRank(pref.getNextPreference()));
+		InMemoryPreferences pref = new InMemoryPreferences(foo, true);
+		while(pref.hasMore())
+			System.out.println(pref.getRank(pref.getNext()));
 	}
 }

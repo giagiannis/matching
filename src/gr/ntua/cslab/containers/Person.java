@@ -1,5 +1,7 @@
 package gr.ntua.cslab.containers;
 
+import gr.ntua.cslab.containers.preferences.Preferences;
+
 /**
  * Person class is modeling the actions that a person can do. 
  * @author Giannis Giannakopoulos
@@ -110,7 +112,7 @@ public class Person {
 	 * @return
 	 */
 	public boolean isMotivatedToBreakUp(){
-		return ((!this.isMarried()) || (this.preferences.getNextPreferenceRank()<this.getCurrentPartnerRank()));
+		return ((!this.isMarried()) || (this.preferences.getNextRank()<this.getCurrentPartnerRank()));
 	}
 	
 	

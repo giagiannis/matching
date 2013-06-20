@@ -1,5 +1,8 @@
 package gr.ntua.cslab.containers;
 
+import gr.ntua.cslab.containers.iterators.FreePersonIterator;
+import gr.ntua.cslab.containers.iterators.MotivatedToBreakUpIterator;
+import gr.ntua.cslab.containers.iterators.PersonIterator;
 import gr.ntua.cslab.data.DatasetReader;
 
 import java.util.Iterator;

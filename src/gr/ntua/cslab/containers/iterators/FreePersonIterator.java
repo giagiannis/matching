@@ -1,4 +1,7 @@
-package gr.ntua.cslab.containers;
+package gr.ntua.cslab.containers.iterators;
+
+import gr.ntua.cslab.containers.Person;
+import gr.ntua.cslab.containers.PersonList;
 
 import java.util.Iterator;
 

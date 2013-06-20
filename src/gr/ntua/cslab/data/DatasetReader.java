@@ -2,7 +2,7 @@ package gr.ntua.cslab.data;
 
 import gr.ntua.cslab.containers.Person;
 import gr.ntua.cslab.containers.PersonList;
-import gr.ntua.cslab.containers.Preferences;
+import gr.ntua.cslab.containers.preferences.InMemoryPreferences;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -56,7 +56,7 @@ public class DatasetReader {
 			list = new PersonList(numOfPeople);
 			int id=1;
 			while(this.reader.ready()){
-				list.add(new Person(id++, new Preferences(this.getIntArray(this.reader.readLine()), this.sortedByRank)));
+				list.add(new Person(id++, new InMemoryPreferences(this.getIntArray(this.reader.readLine()), this.sortedByRank)));
 			}
 			this.reader.close();
 		} catch (IOException e) {
