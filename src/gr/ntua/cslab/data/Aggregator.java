@@ -98,9 +98,9 @@ public class Aggregator {
 		Double sum=0.0;
 		for(int i=0;i<values.length;i++){
 			try{	
-				sum+=new Integer(values[i]);
+				sum+=Math.abs(new Integer(values[i]));
 			} catch (NumberFormatException e){
-				sum+=new Double (values[i]);
+				sum+=Math.abs(new Double (values[i]));
 			}
 		}
 		sum/=values.length;
