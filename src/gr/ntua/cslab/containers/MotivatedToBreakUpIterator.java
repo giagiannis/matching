@@ -21,7 +21,7 @@ public class MotivatedToBreakUpIterator implements Iterator<Person> {
 
 	@Override
 	public Person next() {
-		return this.people.get(this.id);
+		return this.people.get(this.id++);
 	}
 
 	@Override

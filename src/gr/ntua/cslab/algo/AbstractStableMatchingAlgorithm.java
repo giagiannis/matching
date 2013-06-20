@@ -142,11 +142,20 @@ public abstract class AbstractStableMatchingAlgorithm {
 		else
 			acceptors=this.men;
 		Iterator<Person> it = proposers.getMotivatedToBreakUpIterator();
+//		while(it.hasNext()){
+//			Person proposer = it.next(), acceptor =acceptors.get(proposer.getPreferences().getNextPreference()); 
+//			if(proposer.propose(acceptor)){
+//				this.numberOfMarriages+=1;
+//			}
+//		}
 		while(it.hasNext()){
-			Person man = it.next(), woman =acceptors.get(man.getPreferences().getNextPreference()); 
-			if(man.propose(woman)){
-				this.numberOfMarriages+=1;
-			}
+			Person proposer = it.next();
+			Person acceptor=acceptors.get(proposer.getPreferences().getNextPreference());
+			proposer.offer(acceptor);
 		}
+		it = acceptors.getIterator();
+		while(it.hasNext())
+			if(it.next().reviewOffers())
+				this.numberOfMarriages+=1;
 	}
 }
