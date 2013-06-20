@@ -10,6 +10,7 @@ public class RingPreferences implements Preferences {
 	private int step;
 	private int base=0;
 	private int size;
+	private int initialBase=0;
 	
 	public RingPreferences() {
 		
@@ -23,8 +24,9 @@ public class RingPreferences implements Preferences {
 		this.size=size;
 		this.step=step;
 		this.index=base-1;
-		this.base=base;
-		System.out.println("Base:"+this.base);
+		this.base=base-1;
+		this.initialBase=base;
+//		System.out.println("Base:"+this.base);
 	}
 	
 	
@@ -43,18 +45,13 @@ public class RingPreferences implements Preferences {
 	private int nextIndex(){
 		int nextIndex=this.index;
 		nextIndex = (nextIndex+this.step)%this.size;
+//		System.out.println("Next:"+nextIndex);
 		if(nextIndex==this.base ){
-			System.out.println("Rebasing "+nextIndex);
+//			System.out.println("Rebasing "+nextIndex);
 			this.base+=1;
 			nextIndex=this.base;
 		}
 		return nextIndex;
-	}
-
-	@Override
-	public int getRank(int id) {
-		
-		return 0;
 	}
 
 	@Override
@@ -64,22 +61,26 @@ public class RingPreferences implements Preferences {
 		else
 			return false;
 	}
+	
+	@Override
+	public int getRank(int id) {
+		System.out.println("Div:\t"+id/this.step);
+		System.out.println("Mod:\t"+id%this.step);
+		return 0;
+	}
 
 	@Override
-	public int getNextRank() {
-		
-		return 0;
+	public int getNextRank() {	
+		return this.count+1;
 	}
 
 	public static void main(String[] args) {
 		RingPreferences pref = new RingPreferences(new Integer(args[0]), new Integer(args[1]), new Integer(args[2]));
 		Set<Integer> set = new HashSet<Integer>();
-		while(pref.hasMore()){
-			int temp=pref.getNext();
-			System.out.println(temp);
-			set.add(temp);
+		for(int i=0;i<5;i++){
+			System.out.println(pref.getNext());
 		}
-		System.out.println("valid\t"+(set.size()==new Integer(args[0])));
-		System.out.println(set);
+		System.out.println("Next rank:"+pref.getNextRank());
+		System.out.println("8 rank:\t"+pref.getRank(8));
 	}
 }
