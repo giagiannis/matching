@@ -3,6 +3,7 @@ package gr.ntua.cslab.data;
 import gr.ntua.cslab.containers.Person;
 import gr.ntua.cslab.containers.PersonList;
 import gr.ntua.cslab.containers.preferences.InMemoryPreferences;
+import gr.ntua.cslab.containers.preferences.RingPreferences;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -17,8 +18,18 @@ import java.io.IOException;
  */
 public class DatasetReader {
 
+	public static int MEN=0, WOMEN=1;
+	
 	private BufferedReader reader;
 	private boolean sortedByRank=true;
+	private int size;
+	
+	/**
+	 * Alternative constructor, used to create a preference list using ringpreferences.
+	 */
+	public DatasetReader(int size) {
+		this.size=size;
+	}
 	
 	public DatasetReader(String filename){
 		try {
@@ -61,6 +72,22 @@ public class DatasetReader {
 			this.reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	public PersonList getPeople(int type){
+		// the parameters of type creation will be modified on demand in the future
+		
+		PersonList list=new PersonList(this.size);
+		if(type==MEN){
+			for(int i=1; i<this.size+1;i++){
+				list.add(new Person(i, new RingPreferences(this.size, i%(size/10)+20, i%(size/2)+30)));
+			}
+		} else {
+			for(int i=1; i<this.size+1;i++){
+				list.add(new Person(i, new RingPreferences(this.size, i%(size/20)+10, i%(size/2)+30)));
+			}
 		}
 		return list;
 	}
