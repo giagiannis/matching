@@ -1,7 +1,7 @@
 package gr.ntua.cslab.algo;
 
 import gr.ntua.cslab.containers.PersonList;
-import gr.ntua.cslab.data.DatasetReader;
+//import gr.ntua.cslab.data.DatasetReader;
 
 /**
  * This class implements the classic algorithm which solves the Stable Marriage Problem proposed by Shapley and Roth.
@@ -12,6 +12,9 @@ import gr.ntua.cslab.data.DatasetReader;
  */
 public class SMA extends AbstractStableMatchingAlgorithm{
 
+	public SMA() {
+		
+	}
 	
 	public SMA(PersonList men, PersonList women) {
 		super(men,women);
@@ -23,21 +26,28 @@ public class SMA extends AbstractStableMatchingAlgorithm{
 	@Override
 	protected boolean menPropose() {
 		return true;
-	}	
+	}
 	
-	public static void main(String[] args) {
-		if(args.length<2){
-			System.err.println("I need men and women preferences!");
-			System.exit(1);
-		}
-		
-		DatasetReader reader = new DatasetReader(args[0]);
-		PersonList men = reader.getPeople();
-		reader = new DatasetReader(args[1]);
-		PersonList women = reader.getPeople();
-		AbstractStableMatchingAlgorithm algo = new SMA(men, women);
-		algo.run();
-		
-		algo.performance();
+	@Override
+	public void step() {
+		this.proposeStep(this.men);
+		this.proposeStep(this.men);
+	}
+	
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException {
+		AbstractStableMatchingAlgorithm.runStaticWithRingPreferences(SMA.class, args);
+//		if(args.length<2){
+//			System.err.println("I need men and women preferences!");
+//			System.exit(1);
+//		}
+//		
+//		DatasetReader reader = new DatasetReader(args[0]);
+//		PersonList men = reader.getPeople();
+//		reader = new DatasetReader(args[1]);
+//		PersonList women = reader.getPeople();
+//		AbstractStableMatchingAlgorithm algo = new SMA(men, women);
+//		algo.run();
+//		
+//		algo.performance();
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import gr.ntua.cslab.containers.Person;
 import gr.ntua.cslab.containers.PersonList;
+import gr.ntua.cslab.data.DatasetReader;
 import gr.ntua.cslab.metrics.AbstractCost;
 import gr.ntua.cslab.metrics.EgalitarianCost;
 import gr.ntua.cslab.metrics.GenderInequalityCost;
@@ -18,7 +19,7 @@ import gr.ntua.cslab.metrics.SexEqualnessCost;
 public abstract class AbstractStableMatchingAlgorithm {
 
 	protected PersonList men, women;
-	private int stepCounter;
+	protected int stepCounter;
 	protected int numberOfMarriages=0;
 	private long execDuration;
 	/**
@@ -74,10 +75,11 @@ public abstract class AbstractStableMatchingAlgorithm {
 	 * Abstract method implemented separately be each algorithm
 	 */
 	public void step() {
-		if(this.menPropose())
+		if(this.menPropose()){
 			this.proposeStep(this.men);
-		else
+		} else {
 			this.proposeStep(this.women);
+		}
 	}
 	
 	/**
@@ -96,7 +98,6 @@ public abstract class AbstractStableMatchingAlgorithm {
 		this.stepCounter=0;
 		while(this.men.hasSinglePeople() || this.women.hasSinglePeople()){
 			this.step();
-			this.stepCounter++;
 		}
 		this.execDuration=System.currentTimeMillis()-start;
 	}
@@ -119,7 +120,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 		cost = new SexEqualnessCost(this.men, this.women);
 		System.out.format("%.4f\t",cost.get());
 		cost = new GenderInequalityCost(this.men, this.women);
-		System.out.format("%.4f",cost.get());
+		System.out.format("%.4f",cost.getPercentage());
 	}
 	
 	/**
@@ -136,6 +137,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 	 * @param proposers
 	 */
 	protected void proposeStep(PersonList proposers){
+		this.stepCounter++;
 		PersonList acceptors;
 		if(proposers==this.men)
 			acceptors=this.women;
@@ -157,5 +159,14 @@ public abstract class AbstractStableMatchingAlgorithm {
 		while(it.hasNext())
 			if(it.next().reviewOffers())
 				this.numberOfMarriages+=1;
+	}
+	
+	protected static void runStaticWithRingPreferences(Class<?> AlgorithmsClass, String[] args) throws InstantiationException, IllegalAccessException{
+		DatasetReader reader = new DatasetReader(new Integer(args[0]));
+		AbstractStableMatchingAlgorithm algo=(AbstractStableMatchingAlgorithm) AlgorithmsClass.newInstance();
+		algo.setMen(reader.getPeople(DatasetReader.MEN));
+		algo.setWomen(reader.getPeople(DatasetReader.WOMEN));
+		algo.run();
+		algo.performance();
 	}
 }

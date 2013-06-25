@@ -3,7 +3,7 @@ package gr.ntua.cslab.algo;
 import java.util.Random;
 
 import gr.ntua.cslab.containers.PersonList;
-import gr.ntua.cslab.data.DatasetReader;
+//import gr.ntua.cslab.data.DatasetReader;
 
 /**
  * This class implements the Equitable Stable Marriage Algorithm using a randomized method to 
@@ -14,10 +14,14 @@ import gr.ntua.cslab.data.DatasetReader;
 public class RESMA extends AbstractStableMatchingAlgorithm {
 
 	private Random rand;
+	
+	public RESMA() {
+		rand = new Random();
+	}
+	
 	public RESMA(PersonList men, PersonList women) {
 		super(men, women);
-		this.rand = new Random();
-		
+		this.rand = new Random();	
 	}
 
 	/**
@@ -25,25 +29,23 @@ public class RESMA extends AbstractStableMatchingAlgorithm {
 	 */
 	@Override
 	protected boolean menPropose() {
-		if(this.rand.nextBoolean())
-			return true;
-		else
-			return false;
+		return (this.rand.nextBoolean());
 	}
 
-	public static void main(String[] args) {
-		if(args.length<2){
-			System.err.println("I need men and women preferences!");
-			System.exit(1);
-		}
-		
-		DatasetReader reader = new DatasetReader(args[0]);
-		PersonList men = reader.getPeople();
-		reader = new DatasetReader(args[1]);
-		PersonList women = reader.getPeople();
-		AbstractStableMatchingAlgorithm algo = new RESMA(men, women);
-		algo.run();
-
-		algo.performance();
+	public static void main(String[] args) throws InstantiationException, IllegalAccessException {
+		AbstractStableMatchingAlgorithm.runStaticWithRingPreferences(RESMA.class, args);
+//		if(args.length<2){
+//			System.err.println("I need men and women preferences!");
+//			System.exit(1);
+//		}
+//		
+//		DatasetReader reader = new DatasetReader(args[0]);
+//		PersonList men = reader.getPeople();
+//		reader = new DatasetReader(args[1]);
+//		PersonList women = reader.getPeople();
+//		AbstractStableMatchingAlgorithm algo = new RESMA(men, women);
+//		algo.run();
+//
+//		algo.performance();
 	}
 }
