@@ -4,18 +4,25 @@
 # second argument is used to point to the output path
 
 LABEL[1]='SMA';
-LABEL[2]='ESMA';
-LABEL[3]='RESMA';
-LABEL[4]='AAESMA';
-
-COLUMNS_PER_PLOT=7;
+LABEL[2]='NESMA';
+LABEL[3]='ESMA';
+LABEL[4]='RESMA';
+LABEL[5]='AAESMA';
+LABEL[6]='AAAESMA';
 
 if [ $# -lt 1 ]; then
 	echo "Expect number of column to print";
 	exit;
 fi
+
 if [ -z "$OUTPUT_FILE" ]; then
 	OUTPUT_FILE="output/current"
+fi
+
+if [ -z $3 ]; then
+	START_COL=1;
+else
+	START_COL=$3;
 fi
 
 PICTURE_PATH="$2pic$1.png";
@@ -30,12 +37,13 @@ else
 	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"set title  '$PLOT_TITLE vs Dataset size'; set xlabel 'Dataset size'; set ylabel '$PLOT_TITLE'; plot ";
 fi
 
+
 echo -en "Creating plot with cols ";
-for i in `seq 1 4`; do
+for i in `seq $START_COL ${#LABEL[@]}`; do
 	COL=$[$[$i-1]*7+$1];
 	echo -n $COL" "
 	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"'$OUTPUT_FILE' using 1:$COL with lines title '${LABEL[$i]}'";
-	if [ $i -lt 4 ]; then 
+	if [ $i -lt ${#LABEL[@]} ]; then 
 		GNUPLOT_COMMAND=$GNUPLOT_COMMAND", "	
 	fi
 done

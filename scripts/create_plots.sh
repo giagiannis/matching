@@ -15,7 +15,7 @@ PLOT_NAME[8]='Inequality cost (median)'
 PLOT_SCRIPT=`find . -name plot_one.sh`
 for i in `seq 2 8` ; do
 	export PLOT_TITLE=${PLOT_NAME[$i]};
-	$PLOT_SCRIPT $i $PICS_DIR
+	$PLOT_SCRIPT $i $PICS_DIR $1
 done
 
 # step used to pack every image to a single pdf file 
