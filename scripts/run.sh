@@ -12,6 +12,8 @@ fi
 if [ -z "$STEP" ]; then
 	STEP=100;
 	echo "Default step used: $STEP"
+else
+	echo "Step used: $STEP";
 fi
 
 # jvm variables 
@@ -35,6 +37,10 @@ if [ $# -lt 2 ]; then
 	exit 1
 fi
 
+if [ -z "$STEP_OUTPUT_DIR" ]; then
+	echo "Step output: null";
+fi
+
 for i in `seq $1 $STEP $2`; do \
 	# definition of current iteration input
 	MEN=$DATASET_DIR/men$i.txt;
@@ -42,11 +48,16 @@ for i in `seq $1 $STEP $2`; do \
 	
 	# run iteration
 	echo -ne "$i\t" >> $OUTPUT;
-	for ALGO in SMA ESMA RESMA AAESMA; do
+	for ALGO in SMA NESMA ESMA RESMA AAESMA AAAESMA; do
+		if [ -z "$STEP_OUTPUT_DIR" ]; then 
+			STEP_OUTPUT=/dev/null
+		else
+			STEP_OUTPUT="$STEP_OUTPUT_DIR/size-$i-$ALGO.txt"
+		fi
 		EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algo.$ALGO $MEN $WOMEN";
 		echo $EXEC;
-		$EXEC >> $OUTPUT;
-		echo -en "\t" >> $OUTPUT;
+		$EXEC >> $OUTPUT 2>$STEP_OUTPUT;
+		echo -en "\t" >> $OUTPUT ;
 	done
 	
 	echo >> $OUTPUT;

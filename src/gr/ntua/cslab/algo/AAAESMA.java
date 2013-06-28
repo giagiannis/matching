@@ -11,7 +11,6 @@ public class AAAESMA extends AbstractStableMatchingAlgorithm {
 
 	public AAAESMA(PersonList men, PersonList women) {
 		super(men, women);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

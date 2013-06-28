@@ -18,6 +18,9 @@ else
 	echo "JVM flags used: $JVM_FLAGS";
 fi
 
+if [ -z "$STEP_OUTPUT_DIR" ]; then
+	echo "Step output: null";
+fi
 
 OUTPUT_DIRECTORY=output
 OUTPUT_FILE="output`date \"+%y%m%d_%H%M%S\"`.txt"
@@ -33,13 +36,19 @@ if [ $# -lt 2 ]; then
 	exit 1
 fi
 
+
 for i in `seq $1 $STEP $2`; do \
 	# run iteration
 	echo -ne "$i\t" >> $OUTPUT;
 	for ALGO in SMA NESMA ESMA RESMA AAESMA AAAESMA; do
+		if [ -z "$STEP_OUTPUT_DIR" ]; then 
+			STEP_OUTPUT=/dev/null
+		else
+			STEP_OUTPUT="$STEP_OUTPUT_DIR/step$i-$ALGO.txt"
+		fi
 		EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algo.$ALGO $i";
 		echo $EXEC;
-		$EXEC >> $OUTPUT;
+		$EXEC 1 >> $OUTPUT 2>$STEP_OUTPUT;
 		echo -en "\t" >> $OUTPUT;
 	done
 	

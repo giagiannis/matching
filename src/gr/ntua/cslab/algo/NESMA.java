@@ -26,25 +26,10 @@ public class NESMA extends AbstractStableMatchingAlgorithm {
 	}
 	
 	@Override
-	protected void proposeStep(PersonList proposers) {
-		this.stepCounter+=1;
-		PersonList acceptors;
-		if(proposers==this.men)
-			acceptors=this.women;
-		else
-			acceptors=this.men;
-		Iterator<Person> it = proposers.getSinglePersonIterator();
-		while(it.hasNext()){
-			Person proposer = it.next();
-			Person acceptor=acceptors.get(proposer.getPreferences().getNext());
-			proposer.offer(acceptor);
-		}
-		it = acceptors.getIterator();
-		while(it.hasNext())
-			if(it.next().reviewOffers())
-				this.numberOfMarriages+=1;
+	protected Iterator<Person> getIterator(PersonList proposers) {
+		return proposers.getSinglePersonIterator();
 	}
-
+	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException {
 		AbstractStableMatchingAlgorithm.runStaticWithRingPreferences(NESMA.class, args);
 	}

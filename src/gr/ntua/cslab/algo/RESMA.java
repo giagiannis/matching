@@ -34,18 +34,5 @@ public class RESMA extends AbstractStableMatchingAlgorithm {
 
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException {
 		AbstractStableMatchingAlgorithm.runStaticWithRingPreferences(RESMA.class, args);
-//		if(args.length<2){
-//			System.err.println("I need men and women preferences!");
-//			System.exit(1);
-//		}
-//		
-//		DatasetReader reader = new DatasetReader(args[0]);
-//		PersonList men = reader.getPeople();
-//		reader = new DatasetReader(args[1]);
-//		PersonList women = reader.getPeople();
-//		AbstractStableMatchingAlgorithm algo = new RESMA(men, women);
-//		algo.run();
-//
-//		algo.performance();
 	}
 }

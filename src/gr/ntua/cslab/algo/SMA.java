@@ -1,5 +1,8 @@
 package gr.ntua.cslab.algo;
 
+import java.util.Iterator;
+
+import gr.ntua.cslab.containers.Person;
 import gr.ntua.cslab.containers.PersonList;
 //import gr.ntua.cslab.data.DatasetReader;
 
@@ -29,25 +32,11 @@ public class SMA extends AbstractStableMatchingAlgorithm{
 	}
 	
 	@Override
-	public void step() {
-		this.proposeStep(this.men);
-		this.proposeStep(this.men);
+	protected Iterator<Person> getIterator(PersonList proposers) {
+		return proposers.getSinglePersonIterator();
 	}
 	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException {
 		AbstractStableMatchingAlgorithm.runStaticWithRingPreferences(SMA.class, args);
-//		if(args.length<2){
-//			System.err.println("I need men and women preferences!");
-//			System.exit(1);
-//		}
-//		
-//		DatasetReader reader = new DatasetReader(args[0]);
-//		PersonList men = reader.getPeople();
-//		reader = new DatasetReader(args[1]);
-//		PersonList women = reader.getPeople();
-//		AbstractStableMatchingAlgorithm algo = new SMA(men, women);
-//		algo.run();
-//		
-//		algo.performance();
 	}
 }

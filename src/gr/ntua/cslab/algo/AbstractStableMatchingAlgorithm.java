@@ -22,6 +22,9 @@ public abstract class AbstractStableMatchingAlgorithm {
 	protected int stepCounter;
 	protected int numberOfMarriages=0;
 	private long execDuration;
+	
+	private int numberOfStepsTopPrintMessage=0; 
+	
 	/**
 	 * Empty constructor
 	 */
@@ -72,6 +75,14 @@ public abstract class AbstractStableMatchingAlgorithm {
 	}
 	
 	/**
+	 * This parameter is about the frequency of the step-based messages that are printed. Default is 0 (no steps).
+	 * @param steps
+	 */
+	public void setStepOfMessage(int steps){
+		this.numberOfStepsTopPrintMessage=steps;
+	}
+	
+	/**
 	 * Abstract method implemented separately be each algorithm
 	 */
 	public void step() {
@@ -89,6 +100,15 @@ public abstract class AbstractStableMatchingAlgorithm {
 	 * @return
 	 */
 	protected abstract boolean menPropose();
+	
+	/**
+	 * This method returns the iterator that will determine which people are going to be processed in the algorithm
+	 * By default, motivated to break up people are returned. 
+	 * @return
+	 */
+	protected Iterator<Person> getIterator(PersonList proposers){
+		return proposers.getMotivatedToBreakUpIterator();
+	}
 	
 	/**
 	 * Default running method: while there exist single people, marry them
@@ -123,6 +143,18 @@ public abstract class AbstractStableMatchingAlgorithm {
 		System.out.format("%.4f",cost.getPercentage());
 	}
 	
+	protected void stepDiagnostics(){
+		System.err.format("%d\t",this.getStepCounter());
+		AbstractCost cost = new RegretCost(this.men, this.women);
+		System.err.format("%.4f\t",cost.get());
+		cost = new EgalitarianCost(this.men, this.women);
+		System.err.format("%.4f\t",cost.get());
+		cost = new SexEqualnessCost(this.men, this.women);
+		System.err.format("%.4f\t",cost.get());
+		cost = new GenderInequalityCost(this.men, this.women);
+		System.err.format("%.4f\n",cost.getPercentage());
+	}
+	
 	/**
 	 * Returns the current step.
 	 * @return
@@ -143,13 +175,8 @@ public abstract class AbstractStableMatchingAlgorithm {
 			acceptors=this.women;
 		else
 			acceptors=this.men;
-		Iterator<Person> it = proposers.getMotivatedToBreakUpIterator();
-//		while(it.hasNext()){
-//			Person proposer = it.next(), acceptor =acceptors.get(proposer.getPreferences().getNextPreference()); 
-//			if(proposer.propose(acceptor)){
-//				this.numberOfMarriages+=1;
-//			}
-//		}
+		Iterator<Person> it = this.getIterator(proposers);
+		
 		while(it.hasNext()){
 			Person proposer = it.next();
 			Person acceptor=acceptors.get(proposer.getPreferences().getNext());
@@ -159,13 +186,30 @@ public abstract class AbstractStableMatchingAlgorithm {
 		while(it.hasNext())
 			if(it.next().reviewOffers())
 				this.numberOfMarriages+=1;
+		if(numberOfStepsTopPrintMessage!=0 && this.getStepCounter()%this.numberOfStepsTopPrintMessage==0){
+			this.stepDiagnostics();
+		}
 	}
 	
 	protected static void runStaticWithRingPreferences(Class<?> AlgorithmsClass, String[] args) throws InstantiationException, IllegalAccessException{
-		DatasetReader reader = new DatasetReader(new Integer(args[0]));
 		AbstractStableMatchingAlgorithm algo=(AbstractStableMatchingAlgorithm) AlgorithmsClass.newInstance();
-		algo.setMen(reader.getPeople(DatasetReader.MEN));
-		algo.setWomen(reader.getPeople(DatasetReader.WOMEN));
+		if(args.length<1){
+			System.err.println("I need at least one argument");
+			System.exit(1);
+		} else if (args.length==1) {
+			DatasetReader reader = new DatasetReader(new Integer(args[0]));
+			algo.setMen(reader.getPeople(DatasetReader.MEN));
+			algo.setWomen(reader.getPeople(DatasetReader.WOMEN));
+		} else if(args.length==2){
+			DatasetReader reader = new DatasetReader(args[0]);
+			algo.setMen(reader.getPeople());
+			reader = new DatasetReader(args[1]);
+			algo.setWomen(reader.getPeople());
+		} else {
+			System.err.println("Don't know what to do");
+			System.exit(1);
+		}
+		algo.setStepOfMessage(100);
 		algo.run();
 		algo.performance();
 	}
