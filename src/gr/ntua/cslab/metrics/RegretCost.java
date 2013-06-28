@@ -22,8 +22,10 @@ public class RegretCost extends AbstractCost {
 		int max=0;
 		while(it.hasNext()){
 			Person current=it.next();
-			int a=current.getCurrentPartnerRank(), b=current.getCurrentPartner().getCurrentPartnerRank();
-			max=Math.max(max, Math.max(a, b));
+			if(current.getCurrentPartner()!=null){
+				int a=current.getCurrentPartnerRank(), b=current.getCurrentPartner().getCurrentPartnerRank();
+				max=Math.max(max, Math.max(a, b));
+			}
 		}
 		return max;
 	}

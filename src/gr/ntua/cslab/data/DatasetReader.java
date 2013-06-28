@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+//import java.util.Random;
 
 /**
  * Dataset reader. The dataset must be a square matrix containing only the preferences. Ids are given automatically 
@@ -25,11 +26,12 @@ public class DatasetReader {
 	private int size;
 	
 	/**
-	 * Alternative constructor, used to create a preference list using ringpreferences.
+	 * Alternative constructor, used to create a preference list using ring preferences.
 	 */
 	public DatasetReader(int size) {
 		this.size=size;
 	}
+	
 	
 	public DatasetReader(String filename){
 		try {
@@ -78,19 +80,15 @@ public class DatasetReader {
 	
 	public PersonList getPeople(int type){
 		// the parameters of type creation will be modified on demand in the future
-		
+//		Random random = new Random();
 		PersonList list=new PersonList(this.size);
 		if(type==MEN){
-			for(int i=1; i<this.size+1;i++){
-				list.add(new Person(i, new RingPreferences(this.size, i%(size/10)+20, i%(size/2)+30)));
-			}
+			for(int i=1; i<this.size+1;i++)
+				list.add(new Person(i, new RingPreferences(this.size, i%(this.size/20)+1, i%(this.size/100)+1)));
 		} else {
-			for(int i=1; i<this.size+1;i++){
-				list.add(new Person(i, new RingPreferences(this.size, i%(size/20)+10, i%(size/2)+30)));
-			}
+			for(int i=1; i<this.size+1;i++)
+				list.add(new Person(i, new RingPreferences(this.size, i%(this.size/100)+1, i%(this.size/100)+1)));
 		}
 		return list;
 	}
-
-	
 }
