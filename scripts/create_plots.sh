@@ -24,6 +24,6 @@ done
 
 PDF_NAME="$PICS_DIR/graphs_`date "+%y%m%d_%H%M%S"`.pdf"
 
-convert $PICS_DIR*.png $PDF_NAME
+convert $PICS_DIR*.svg $PDF_NAME
 ln -sf $PDF_NAME current.pdf  
-rm $PICS_DIR/*.png
+rm $PICS_DIR/*.svg

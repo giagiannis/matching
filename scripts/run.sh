@@ -2,6 +2,16 @@
 # script used to compare the algorithms SMA and ESMA
 # the expected arguments are: start dataset size and stop dataset size
 
+if [ $1 == "help" ]; then
+	echo -e "Variables to set:\n\
+	DATASET_DIR:\twhere is the dataset located (defalt is data)\n\
+	STEP:\t\tstep size (default is 100)\n\
+	JVM_FLAGS:\tjvm flags -memory et al- (default is -Xmx2g)\n\
+	STEP_OUTPUT_DIR:\twhere will the step output exist (default is /dev/null)\n\
+	ALGORITHMS:\tspecify the names of the algorithms that you want to run (default is ESMA NESMA AESMA RESMA AAESMA AAAESMA)";
+	exit 1
+fi
+
 # where are the datasets located
 if [ -z "$DATASET_DIR" ]; then
 	DATASET_DIR=data;
@@ -20,6 +30,10 @@ fi
 if [ -z "$JVM_FLAGS" ]; then
 	JVM_FLAGS="-Xmx2g";
 	echo "Default JVM flags: $JVM_FLAGS"
+fi
+
+if [ -z "$ALGORITHMS" ]; then
+	ALGORITHMS="SMA NESMA ESMA RESMA AAESMA AAAESMA";
 fi
 
 
@@ -48,7 +62,7 @@ for i in `seq $1 $STEP $2`; do \
 	
 	# run iteration
 	echo -ne "$i\t" >> $OUTPUT;
-	for ALGO in SMA NESMA ESMA RESMA AAESMA AAAESMA; do
+	for ALGO in $ALGORITHMS; do
 		if [ -z "$STEP_OUTPUT_DIR" ]; then 
 			STEP_OUTPUT=/dev/null
 		else

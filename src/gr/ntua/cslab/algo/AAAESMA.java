@@ -15,8 +15,7 @@ public class AAAESMA extends AbstractStableMatchingAlgorithm {
 
 	@Override
 	protected boolean menPropose() {
-		SexEqualnessCost cost = new SexEqualnessCost(men, women);
-		return (cost.get()>0);
+		return (new SexEqualnessCost(men, women).get()>0);
 	}
 	
 	@Override

@@ -13,6 +13,10 @@ public class SexEqualnessCost extends AbstractCost {
 		super(men, women);
 	}
 
+	/**
+	 * Ranks of men-ranks of women. Positive value means that men are less happy than women, 
+	 * while negative value means that women are less happy than men.
+	 */
 	@Override
 	public double get() {
 		return SexEqualnessCost.getRanksSum(this.men)-SexEqualnessCost.getRanksSum(this.women);

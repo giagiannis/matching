@@ -21,8 +21,7 @@ public class AAESMA extends AbstractStableMatchingAlgorithm {
 
 	@Override
 	protected boolean menPropose() {
-		SexEqualnessCost cost = new SexEqualnessCost(this.men, this.women);
-		return (cost.get()>0);
+		return (new SexEqualnessCost(this.men, this.women).get()>0);
 	}
 
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException {

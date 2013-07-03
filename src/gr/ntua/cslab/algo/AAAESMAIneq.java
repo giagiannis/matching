@@ -11,8 +11,7 @@ public class AAAESMAIneq extends AAAESMA{
 	
 	@Override
 	protected boolean menPropose() {
-		GenderInequalityCost cost = new GenderInequalityCost(men, women);
-		return (cost.get()<0);
+		return (new GenderInequalityCost(men, women).get()<0);
 	}
 
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException {

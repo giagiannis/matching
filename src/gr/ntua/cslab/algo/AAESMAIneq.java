@@ -15,8 +15,7 @@ public class AAESMAIneq extends AAESMA {
 	
 	@Override
 	protected boolean menPropose() {
-		GenderInequalityCost cost = new GenderInequalityCost(men, women);
-		return cost.get()>0;
+		return(new GenderInequalityCost(men, women).get()<=0);
 	}
 
 }

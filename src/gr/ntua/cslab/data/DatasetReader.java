@@ -84,10 +84,10 @@ public class DatasetReader {
 		PersonList list=new PersonList(this.size);
 		if(type==MEN){
 			for(int i=1; i<this.size+1;i++)
-				list.add(new Person(i, new RingPreferences(this.size, i%(this.size/20)+1, i%(this.size/100)+1)));
+				list.add(new Person(i, new RingPreferences(this.size, 5, i%(this.size/8)+1)));
 		} else {
 			for(int i=1; i<this.size+1;i++)
-				list.add(new Person(i, new RingPreferences(this.size, i%(this.size/100)+1, i%(this.size/100)+1)));
+				list.add(new Person(i, new RingPreferences(this.size, 5, i%(this.size/8)+1)));
 		}
 		return list;
 	}

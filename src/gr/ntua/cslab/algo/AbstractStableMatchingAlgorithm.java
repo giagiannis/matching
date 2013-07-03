@@ -23,7 +23,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 	protected int numberOfMarriages=0;
 	private long execDuration;
 	
-	private int numberOfStepsTopPrintMessage=0; 
+	private int numberOfStepsTopPrintMessage=10; 
 	
 	/**
 	 * Empty constructor
@@ -209,8 +209,9 @@ public abstract class AbstractStableMatchingAlgorithm {
 			System.err.println("Don't know what to do");
 			System.exit(1);
 		}
-		algo.setStepOfMessage(100);
+//		algo.setStepOfMessage(100);
 		algo.run();
+		algo.stepDiagnostics();
 		algo.performance();
 	}
 }
