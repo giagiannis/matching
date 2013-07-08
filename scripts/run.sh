@@ -2,9 +2,11 @@
 # script used to compare the algorithms SMA and ESMA
 # the expected arguments are: start dataset size and stop dataset size
 
-if [ $1 == "help" ]; then
+if [ $# -lt 2 ]; then
+	echo "Usage: $0 <start> <stop>"
 	echo -e "Variables to set:\n\
 	DATASET_DIR:\twhere is the dataset located (defalt is data)\n\
+	DATASET_DIR:\twhere is the dataset located for women (defalt points to DATASET_DIR)\n\
 	STEP:\t\tstep size (default is 100)\n\
 	JVM_FLAGS:\tjvm flags -memory et al- (default is -Xmx2g)\n\
 	STEP_OUTPUT_DIR:\twhere will the step output exist (default is /dev/null)\n\
@@ -17,6 +19,14 @@ if [ -z "$DATASET_DIR" ]; then
 	DATASET_DIR=data;
 	echo "Default dataset directory used: $DATASET_DIR"
 fi
+
+if [ -z "$DATASET_DIR_WOMEN" ]; then
+	DATASET_DIR_WOMEN=$DATASET_DIR;
+else
+	echo "Women directory used: $DATASET_DIR_WOMEN"
+fi
+
+
 
 # step to used at loop
 if [ -z "$STEP" ]; then
@@ -33,7 +43,7 @@ if [ -z "$JVM_FLAGS" ]; then
 fi
 
 if [ -z "$ALGORITHMS" ]; then
-	ALGORITHMS="SMA NESMA ESMA RESMA AAESMA AAAESMA";
+	ALGORITHMS="SMA NESMA ESMA RESMA AAESMA AAESMADiff AAAESMA";
 fi
 
 
@@ -47,7 +57,6 @@ MESSAGE=$MESSAGE"#each of the described costs are provided for each algorithms n
 echo $MESSAGE > $OUTPUT
 
 if [ $# -lt 2 ]; then
-	echo "Usage: $0 <start> <stop>"
 	exit 1
 fi
 
@@ -58,7 +67,7 @@ fi
 for i in `seq $1 $STEP $2`; do \
 	# definition of current iteration input
 	MEN=$DATASET_DIR/men$i.txt;
-	WOMEN=$DATASET_DIR/women$i.txt;
+	WOMEN=$DATASET_DIR_WOMEN/women$i.txt;
 	
 	# run iteration
 	echo -ne "$i\t" >> $OUTPUT;
