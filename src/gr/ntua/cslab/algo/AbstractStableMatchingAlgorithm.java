@@ -211,7 +211,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 		}
 //		algo.setStepOfMessage(100);
 		algo.run();
-		algo.stepDiagnostics();
+//		algo.stepDiagnostics();
 		algo.performance();
 	}
 }
