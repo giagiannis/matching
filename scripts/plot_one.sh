@@ -8,7 +8,10 @@ LABEL[2]='NESMA';
 LABEL[3]='ESMA';
 LABEL[4]='RESMA';
 LABEL[5]='AAESMA';
-LABEL[6]='AAAESMA';
+LABEL[6]='AAESMADiff';
+LABEL[7]='AAAESMA';
+
+#ALGORITHMS="SMA NESMA ESMA RESMA AAESMA AAESMADiff AAAESMA";
 
 if [ $# -lt 1 ]; then
 	echo "Expect number of column to print";
@@ -27,7 +30,7 @@ fi
 
 if [ -z "$ALGORITHMS" ]; then
 	echo "Using default algorithms";
-	COUNT=6
+	COUNT=${#LABEL[@]}
 else
 	let count=1;
 	for i in $ALGORITHMS; do
