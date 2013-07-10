@@ -6,20 +6,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
+//import java.util.Random;
 
 public class SkewedDataGenerator extends Generator{
 
-	private Random rand;
+//	private Random rand;
 	
 	public SkewedDataGenerator() {
 		super();
-		this.rand = new Random();
+//		this.rand = new Random();
 	}
 	
 	public SkewedDataGenerator(int count) {
 		super(count);
-		this.rand = new Random();
+//		this.rand = new Random();
 		
 	}
 	
