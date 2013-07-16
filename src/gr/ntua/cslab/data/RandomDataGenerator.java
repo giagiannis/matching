@@ -1,6 +1,5 @@
 package gr.ntua.cslab.data;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,8 +13,6 @@ import java.util.List;
  */
 
 public class RandomDataGenerator extends Generator{
-	private int datasetSize;
-	private PrintStream out=System.out;
 	
 	public RandomDataGenerator(){
 		super();
@@ -25,6 +22,7 @@ public class RandomDataGenerator extends Generator{
 		super(count);
 	}
 	
+	@Override
 	protected void line(){
 		List<String> ordered = new ArrayList<String>();
 		for(Integer i=1;i<this.datasetSize+1;i++)
