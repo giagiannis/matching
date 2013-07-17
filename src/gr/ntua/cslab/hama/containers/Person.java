@@ -1,6 +1,6 @@
 package gr.ntua.cslab.hama.containers;
 
-import gr.ntua.cslab.hama.containers.preferences.MemoryPreferences;
+import gr.ntua.cslab.hama.containers.preferences.Preferences;
 
 public class Person {
 
@@ -8,7 +8,7 @@ public class Person {
 						NO_MARRIAGE=-100;
 	
 	private int id;
-	private MemoryPreferences preferences;
+	private Preferences preferences;
 	private int partnerId;
 
 	private int candidateId;
@@ -18,7 +18,7 @@ public class Person {
 	 * @param id
 	 * @param preferences
 	 */
-	public Person(int id, MemoryPreferences preferences) {
+	public Person(int id, Preferences preferences) {
 		this.id=id;
 		this.preferences=preferences;
 		this.partnerId=NOT_EXIST;
@@ -40,7 +40,7 @@ public class Person {
 	 * Returns the preference rank
 	 * @return
 	 */
-	public MemoryPreferences getPreferences(){
+	public Preferences getPreferences(){
 		return this.preferences;
 	}
 	
