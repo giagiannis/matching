@@ -21,16 +21,25 @@ import org.apache.hama.bsp.sync.SyncException;
 
 public abstract class AbstractAlgorithm extends BSP<NullWritable, NullWritable, Text, Text, Message>{
 
+	// configuration fields
 	private static boolean 	DEBUG=false,
 							DIAGNOSTICS=false;
 	
-	private String dataMen, dataWomen;
+	private static boolean	verbose=true;
+	
 	private int workers=2;
+	private String dataMen, dataWomen;
+	private int inputSize;
+
+	private long executionTime;
+	
+	// per worker fields
 	
 	private PersonList men,women;
 	
 	private int datasetSize;
 	private String[] peerNames;
+
 	public AbstractAlgorithm() {
 		
 	}
@@ -40,12 +49,23 @@ public abstract class AbstractAlgorithm extends BSP<NullWritable, NullWritable, 
 			BSPPeer<NullWritable, NullWritable, Text, Text, Message> peer)
 			throws IOException, SyncException, InterruptedException {
 		super.setup(peer);
-		DataReader reader = new DataReader(peer.getConfiguration().get("men"), peer.getNumPeers(), peer.getPeerIndex());
-		this.men = reader.getPeople();
-		reader = new DataReader(peer.getConfiguration().get("women"), peer.getNumPeers(), peer.getPeerIndex());
-		this.women = reader.getPeople();
-//		peer.write(new Text(peer.getPeerName()), new Text(this.men.toString()));
-//		peer.write(new Text(peer.getPeerName()), new Text(this.women.toString()));
+		DataReader reader=null;
+		if(peer.getConfiguration().getBoolean("ring", false)){
+			peer.write(new Text("Dataset size"), new Text(((Integer)(peer.getConfiguration().getInt("datasetSize", -1))).toString()));
+			reader = new DataReader(peer.getConfiguration().getInt("datasetSize", -1), peer.getNumPeers(), peer.getPeerIndex());
+			this.men = reader.getPeople();
+			peer.write(new Text("men"), new Text(this.men.toString()));
+			new DataReader(peer.getConfiguration().getInt("datasetSize", -1), peer.getNumPeers(), peer.getPeerIndex());
+			this.women = reader.getPeople();
+			peer.write(new Text("women"), new Text(this.women.toString()));
+		} else {
+			reader = new DataReader(peer.getConfiguration().get("men"), peer.getNumPeers(), peer.getPeerIndex());
+			this.men = reader.getPeople();
+			reader = new DataReader(peer.getConfiguration().get("women"), peer.getNumPeers(), peer.getPeerIndex());
+			this.women = reader.getPeople();
+			peer.write(new Text("men"), new Text(this.men.toString()));
+			peer.write(new Text("women"), new Text(this.women.toString()));
+		}
 		this.datasetSize=reader.getDatasetSize();
 		this.workers = peer.getNumPeers();
 		this.peerNames = peer.getAllPeerNames();
@@ -194,11 +214,16 @@ public abstract class AbstractAlgorithm extends BSP<NullWritable, NullWritable, 
 	}
 
 	
-	// static methods used for initialization of the job
+	// CONFIGURATION METHODS
+	// used to configure the hama job
 	
 	public void setInput(String men, String women){
 		this.dataMen=men;
 		this.dataWomen=women;
+	}
+	
+	public void setInput(int datasetSize){
+		this.inputSize=datasetSize;
 	}
 	
 	public void setNumberOfWorkers(int workers){
@@ -207,9 +232,15 @@ public abstract class AbstractAlgorithm extends BSP<NullWritable, NullWritable, 
 	
 	public void run() throws IOException, ClassNotFoundException, InterruptedException{
 		BSPJob job = new BSPJob(new HamaConfiguration(),DemoApp.class);
-		job.setJobName("helloworld");
-		job.getConfiguration().set("men", this.dataMen);
-		job.getConfiguration().set("women", this.dataWomen);
+		job.setJobName("SMA");
+		if(this.inputSize>0){
+			job.getConfiguration().setBoolean("ring", true);
+			job.getConfiguration().setInt("datasetSize", this.inputSize);
+		} else {
+			job.getConfiguration().setBoolean("ring", false);
+			job.getConfiguration().set("men", this.dataMen);
+			job.getConfiguration().set("women", this.dataWomen);
+		}
 		job.setBspClass(DemoApp.class);
 		job.setJarByClass(AbstractAlgorithm.class);
 		
@@ -222,16 +253,38 @@ public abstract class AbstractAlgorithm extends BSP<NullWritable, NullWritable, 
 		job.setOutputValueClass(Text.class);
 		
 		job.setNumBspTask(this.workers);
-		job.waitForCompletion(true);
+		long startTime=System.currentTimeMillis();
+		job.waitForCompletion(verbose);
+		this.executionTime = System.currentTimeMillis()-startTime;
+	}
+	
+	public long getExecutionTime(){
+		return this.executionTime;
+	}
+	
+	public static void setVerbose(boolean flag){
+		AbstractAlgorithm.verbose=flag;
 	}
 	
 	public static void main(String[] args) throws ClassNotFoundException, IOException, InterruptedException {
 		AbstractAlgorithm demo = new DemoApp();
-		demo.setInput(args[0], args[1]);
-		if(args.length>2){
-			demo.setNumberOfWorkers(new Integer(args[2]));
-		}
+		
+		try {
+			demo.setInput(new Integer(args[0]));
+			if(args.length>1){
+				demo.setNumberOfWorkers(new Integer(args[1]));
+			}
+			System.err.println("Using ring preferences with size:\t"+new Integer(args[0]));
+		} catch (NumberFormatException e){
+			demo.setInput(args[0], args[1]);
+			if(args.length>2){
+				demo.setNumberOfWorkers(new Integer(args[2]));
+			}
+			System.err.println("Using in memory preferences:\t"+args[0]+", "+args[1]);
+		} 
+		AbstractAlgorithm.setVerbose(false);
 		demo.run();
+		System.out.println(demo.getExecutionTime()/1000.0);
 	}
 
 }
@@ -239,6 +292,6 @@ public abstract class AbstractAlgorithm extends BSP<NullWritable, NullWritable, 
 class DemoApp extends AbstractAlgorithm {
 	public DemoApp() {
 		super();
-		System.out.println("Hello world");
+//		System.err.println("Hello world");
 	}
 }

@@ -2,7 +2,8 @@ package gr.ntua.cslab.hama.data;
 
 import gr.ntua.cslab.hama.containers.Person;
 import gr.ntua.cslab.hama.containers.PersonList;
-import gr.ntua.cslab.hama.containers.Preferences;
+import gr.ntua.cslab.hama.containers.preferences.MemoryPreferences;
+import gr.ntua.cslab.hama.containers.preferences.RingPreferences;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +26,8 @@ public class DataReader {
 	private int chunks;
 	private int datasetSize;
 	
+	private boolean dataInMemory;
+	
 	private int chunkid;
 	/**
 	 * Constructor used to read a file.
@@ -34,6 +37,7 @@ public class DataReader {
 	 */
 	public DataReader(String filename, int chunks, int chunkid) {
 		this.chunks=chunks;
+		this.dataInMemory=true;
 		try {
 			FSDataInputStream in=FileSystem.get(new Configuration()).open(new Path(filename));
 			this.reader = new BufferedReader(new InputStreamReader(in));
@@ -45,25 +49,46 @@ public class DataReader {
 		}
 	}
 	
+	/**
+	 * Different constructor for data reader class used to load {@link RingPreferences}. 
+	 * @param datasetSize
+	 * @param chunks
+	 * @param chunkid
+	 */
+	public DataReader(int datasetSize, int chunks, int chunkid){
+		this.dataInMemory=false;
+		this.datasetSize=datasetSize;
+		this.chunkid=chunkid;
+		this.chunks=chunks;
+		
+	}
 	public PersonList getPeople(){
 		PersonList list = new PersonList(this.getChunkSize(), this.getOffset());
-		try {
-			int id=0;
-			for(int i=1;i<this.getOffset();i++){
-				id++;
-				this.reader.readLine();
+		if(this.dataInMemory){
+			try {
+				int id=0;
+				for(int i=1;i<this.getOffset();i++){
+					id++;
+					this.reader.readLine();
+				}
+				for(int i=0;i<this.getChunkSize();i++){
+					id++;
+					list.add(new Person(id, new MemoryPreferences(this.reader.readLine().split(" "), true)));
+
+				}
+				while(this.reader.ready() && (this.chunkid==this.chunks-1)){
+					id++;
+					list.add(new Person(id, new MemoryPreferences(this.reader.readLine().split(" "), true)));
+				}
+				this.reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+		} else {
+			int id=this.getOffset();
 			for(int i=0;i<this.getChunkSize();i++){
-				id++;
-				list.add(new Person(id, new Preferences(this.reader.readLine().split(" "), true)));
-				
+				list.add(new Person(id++, new RingPreferences(this.datasetSize,5,1)));
 			}
-			while(this.reader.ready() && (this.chunkid==this.chunks-1)){
-				id++;
-				list.add(new Person(id, new Preferences(this.reader.readLine().split(" "), true)));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		
 		return list;
