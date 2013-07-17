@@ -123,6 +123,11 @@ public class MemoryPreferences implements Preferences {
 	}
 	
 	@Override
+	public void reset() {
+		this.index=0;
+	}
+	
+	@Override
 	public String toString() {
 		String buffer="";
 		int i=1;
