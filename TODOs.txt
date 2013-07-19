@@ -1,0 +1,7 @@
+ToDo's list
+===========
+
+1) Create metrics (calculated with hama supersteps)
+2) Implement different variations of ESMA
+
+3) Create data (skewed and other)
