@@ -97,6 +97,10 @@ public class PersonList {
 		return this.getNumberOfSingles()>0;
 	}
 	
+	public boolean hasUnhappyPeople(){
+		Iterator<Person> it = this.getMotivatedToBreakUpIterator();
+		return it.hasNext();
+	}
 	/**
 	 * Returns all the partners ranks (according to the people contained in PersonList) as an array.
 	 * @return
