@@ -116,12 +116,12 @@ public abstract class AbstractStableMatchingAlgorithm {
 	public void run() {
 		long start=System.currentTimeMillis();
 		this.stepCounter=0;
-		while(this.men.hasSinglePeople() || this.women.hasSinglePeople()){
-//		while(this.men.hasUnhappyPeople()){
+//		while(this.men.hasSinglePeople() || this.women.hasSinglePeople()){
+		while(this.men.hasUnhappyPeople() || this.women.hasUnhappyPeople()){
 			this.step();
 		}
+		
 		this.execDuration=System.currentTimeMillis()-start;
-		System.out.println("Marriages are stable:\t"+this.resultIsStable());
 	}
 	
 	/**
@@ -188,9 +188,9 @@ public abstract class AbstractStableMatchingAlgorithm {
 		while(it.hasNext())
 			if(it.next().reviewOffers())
 				this.numberOfMarriages+=1;
-//		if(numberOfStepsTopPrintMessage!=0 && this.getStepCounter()%this.numberOfStepsTopPrintMessage==0){
-//			this.stepDiagnostics();
-//		}
+		if(numberOfStepsTopPrintMessage!=0 && this.getStepCounter()%this.numberOfStepsTopPrintMessage==0){
+			this.stepDiagnostics();
+		}
 	}
 	
 	protected static void runStaticWithRingPreferences(Class<?> AlgorithmsClass, String[] args) throws InstantiationException, IllegalAccessException{
@@ -215,21 +215,24 @@ public abstract class AbstractStableMatchingAlgorithm {
 		algo.run();
 //		algo.stepDiagnostics();
 		algo.performance();
+		System.out.println("\nUnstable Marriages:\t"+algo.resultIsStable());
 	}
 	
-	protected boolean resultIsStable(){
+	protected int resultIsStable(){
 		Iterator<Person> menIt = this.men.getIterator();
-		
+		int unstableMarriages=0;
 		while(menIt.hasNext()){
 			Person p = menIt.next();
 			Iterator<Person> womenIt = this.women.getIterator();
 			while(womenIt.hasNext()){
 				Person current=womenIt.next();
 				if(		current.getCurrentPartnerRank()>current.getPreferences().getRank(p.getId()) &&
-						p.getCurrentPartnerRank() > p.getPreferences().getRank(current.getId()))
-					return false;
+						p.getCurrentPartnerRank() > p.getPreferences().getRank(current.getId())){
+					System.out.println(current.getId()+" prefers "+p.getId());
+					unstableMarriages++;
+				}
 			}
 		}
-		return true;
+		return unstableMarriages;
 	}
 }

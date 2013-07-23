@@ -103,7 +103,13 @@ public class InMemoryPreferences implements Preferences {
 		else
 			return this.index+1;
 	}
-	
+	@Override
+	public void setNext(int rank) {
+		if(rank<this.index && rank>0)
+			this.index=rank-1;
+		
+	}
+	 
 	@Override
 	public String toString() {
 		String buffer="";
@@ -120,6 +126,9 @@ public class InMemoryPreferences implements Preferences {
 		int[] foo = {1,5,4,2,3};
 		InMemoryPreferences pref = new InMemoryPreferences(foo, true);
 		while(pref.hasMore())
-			System.out.println(pref.getRank(pref.getNext()));
+			System.out.println(pref.getNext());
+		pref.setNext(3);
+		while(pref.hasMore())
+			System.out.println(pref.getNext());
 	}
 }

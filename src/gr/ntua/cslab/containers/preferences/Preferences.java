@@ -32,5 +32,11 @@ public interface Preferences {
 	 * @return
 	 */
 	public int getNextRank();
+	
+	/**
+	 * Sets the next rank for proposal (if the given rank is bigger than the existing rank). 
+	 * @param rank
+	 */
+	public void setNext(int rank);
 
 }

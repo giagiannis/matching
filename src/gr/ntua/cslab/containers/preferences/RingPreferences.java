@@ -133,4 +133,10 @@ public class RingPreferences implements Preferences {
 		return true;
 		
 	}
+	
+	@Override
+	public void setNext(int rank) {
+		this.count=rank;
+		this.index=rank-1;
+	}
 }
