@@ -39,12 +39,14 @@ public abstract class AbstractCost {
 	protected static double getRanksSum(PersonList persons){
 		Iterator<Person> it = persons.getIterator();
 		double sum=0.0;
+		int count=0;
 		while(it.hasNext()){
 			Person p=it.next();
 			if(p.getCurrentPartnerRank()!=Integer.MAX_VALUE){
 				sum+=p.getCurrentPartnerRank();
+				count++;
 			}
 		}
-		return sum;
+		return sum/count;
 	}
 }

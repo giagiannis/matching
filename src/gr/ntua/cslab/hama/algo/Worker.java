@@ -3,6 +3,11 @@ package gr.ntua.cslab.hama.algo;
 import gr.ntua.cslab.hama.containers.Person;
 import gr.ntua.cslab.hama.containers.PersonList;
 import gr.ntua.cslab.hama.data.DataReader;
+import gr.ntua.cslab.hama.metrics.EgalitarianCost;
+import gr.ntua.cslab.hama.metrics.InequalityCost;
+import gr.ntua.cslab.hama.metrics.Metrics;
+import gr.ntua.cslab.hama.metrics.RegretCost;
+import gr.ntua.cslab.hama.metrics.SexEqualnessCost;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -36,6 +41,8 @@ public abstract class Worker extends
 
 	protected int stepCounter=0;
 	
+	private String masterNodeName;
+
 	public Worker() {
 		
 	}
@@ -46,22 +53,23 @@ public abstract class Worker extends
 			throws IOException, SyncException, InterruptedException {
 		super.setup(peer);
 		this.peer=peer;
+		this.masterNodeName = peer.getAllPeerNames()[0];
 		DataReader reader=null;
 		if(peer.getConfiguration().getBoolean("ring", false)){
 			peer.write(new Text("Dataset size"), new Text(((Integer)(peer.getConfiguration().getInt("datasetSize", -1))).toString()));
 			reader = new DataReader(peer.getConfiguration().getInt("datasetSize", -1), peer.getNumPeers(), peer.getPeerIndex());
 			this.men = reader.getPeople();
-			peer.write(new Text("men"), new Text(this.men.toString()));
+			if(DEBUG)peer.write(new Text("men"), new Text(this.men.toString()));
 			new DataReader(peer.getConfiguration().getInt("datasetSize", -1), peer.getNumPeers(), peer.getPeerIndex());
 			this.women = reader.getPeople();
-			peer.write(new Text("women"), new Text(this.women.toString()));
+			if(DEBUG)peer.write(new Text("women"), new Text(this.women.toString()));
 		} else {
 			reader = new DataReader(peer.getConfiguration().get("men"), peer.getNumPeers(), peer.getPeerIndex());
 			this.men = reader.getPeople();
 			reader = new DataReader(peer.getConfiguration().get("women"), peer.getNumPeers(), peer.getPeerIndex());
 			this.women = reader.getPeople();
-			peer.write(new Text("men"), new Text(this.men.toString()));
-			peer.write(new Text("women"), new Text(this.women.toString()));
+			if(DEBUG)peer.write(new Text("men"), new Text(this.men.toString()));
+			if(DEBUG)peer.write(new Text("women"), new Text(this.women.toString()));
 		}
 		this.datasetSize=reader.getDatasetSize();
 		this.workers = peer.getNumPeers();
@@ -79,7 +87,8 @@ public abstract class Worker extends
 		
 		while(control){
 			this.stepCounter++;
-			this.peer.getCounter("ALGORITHM_COUNTERS", "STEPS").increment(1);
+			if(peer.getPeerName().equals(this.masterNodeName))
+				this.peer.getCounter("ALGORITHM_COUNTERS", "STEPS").increment(1);
 			
 			if(this.menPropose()){
 				proposers=this.men;
@@ -102,13 +111,21 @@ public abstract class Worker extends
 			this.statusNotification(acceptors, peer);		//discrete superstep
 			if(DIAGNOSTICS)peer.write(new Text("Statu Not step"), new Text(new Long(System.currentTimeMillis()-start).toString()));
 			start=System.currentTimeMillis();
-			control=this.singlePeopleExist(peer);
+			control=this.terminationCondition(peer);
 			if(DIAGNOSTICS)peer.write(new Text("Control step"), new Text(new Long(System.currentTimeMillis()-start).toString()));
 			
 			
 			if(DEBUG)peer.write(new Text("proposer status"), new Text(proposers.toString()));
 			if(DEBUG)peer.write(new Text("acceptor status"), new Text(acceptors.toString()));
 		}
+		Metrics cost = new RegretCost(peer, this.men, this.women);
+		peer.write(new Text("Regret cost"), new Text(((Double)cost.get()).toString()));
+		cost = new EgalitarianCost(peer, this.men, this.women);
+		peer.write(new Text("Egalitarian cost"), new Text(((Double)cost.get()).toString()));
+		cost = new SexEqualnessCost(peer, this.men, this.women);
+		peer.write(new Text("Sex Equalness cost"), new Text(((Double)cost.get()).toString()));
+		cost = new InequalityCost(peer, this.men, this.women);
+		peer.write(new Text("Inequality cost"), new Text(((Double)cost.get()).toString()));
 	}
 	
 	@Override
@@ -181,27 +198,33 @@ public abstract class Worker extends
 		peer.sync();
 	}
 	
-	private boolean singlePeopleExist(BSPPeer<NullWritable, NullWritable, Text, Text, Message> peer) throws IOException, SyncException, InterruptedException{
+	private boolean terminationCondition(BSPPeer<NullWritable, NullWritable, Text, Text, Message> peer) throws IOException, SyncException, InterruptedException{
 		if(DEBUG) peer.write(new Text("Has more people"), new Text("Dubug"));
-		//for(String p:peer.getAllPeerNames())
-		peer.send(peer.getAllPeerNames()[0], new Message(Message.SINGLES_COUNT_MESSAGE, this.men.hasSinglePeople()));
+		if(this.getTerminationCondition()==AbstractAlgorithm.NO_SINGLES_CONDITION)
+			peer.send(this.masterNodeName, new Message(Message.SINGLES_COUNT_MESSAGE, this.men.hasSinglePeople()));
+		else
+			peer.send(this.masterNodeName, new Message(Message.UNHAPPY_COUNT_MESSAGE, this.men.hasUnhappyPeople() || this.women.hasUnhappyPeople()));
 		peer.sync();
 		if(peer.getPeerName().equals(peer.getAllPeerNames()[0])) {
 			Boolean result=false;
+			int messageType=-1;
 			while(peer.getNumCurrentMessages()>0){
 				Message m = peer.getCurrentMessage();
-				result=result || m.hasSinglePeople();
+				if(messageType==-1)
+					messageType=m.getType();
+				result=result || m.getCondition();
 				if(result)
 					break;
 			}
-			for(String s:peer.getAllPeerNames())
-				peer.send(s, new Message(Message.SINGLES_COUNT_MESSAGE,result));
+			for(String s:peer.getAllPeerNames()){
+				peer.send(s, new Message(messageType,result));
+			}
 		} 
 		peer.sync();
 		Boolean result=false;
 		while(peer.getNumCurrentMessages()>0){
 			Message m=peer.getCurrentMessage();
-			result=m.hasSinglePeople();
+			result=m.getCondition();
 		}
 
 //		peer.sync();
@@ -233,4 +256,12 @@ public abstract class Worker extends
 	 * @return
 	 */
 	protected abstract boolean menPropose();
+	
+	/**
+	 * Method used to identify which is the termination condition of the algorithm.
+	 * For instance, in the case of SMA the termination condition is not to exist single people
+	 * while in other algorithms the condition is not to exist unhappy people.
+	 * @return
+	 */
+	protected abstract int getTerminationCondition();
 }

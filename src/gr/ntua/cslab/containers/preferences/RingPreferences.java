@@ -105,11 +105,17 @@ public class RingPreferences implements Preferences {
 	public static void main(String[] args) {
 		RingPreferences pref = new RingPreferences(new Integer(args[0]), new Integer(args[1]), new Integer(args[2]));
 //		Set<Integer> set = new HashSet<Integer>();
-		HashMap<Integer, Integer> first=new HashMap<Integer, Integer>();
-		int count=1;
+//		HashMap<Integer, Integer> first=new HashMap<Integer, Integer>();
+//		int count=1;
 		while(pref.hasMore())
-			first.put(count++, pref.getNext());
-//		System.out.println(first);
+//			first.put(count++, pref.getNext());
+			System.out.print(pref.getNext()+" ");
+		System.out.println();
+		pref.setNext(2);
+		while(pref.hasMore())
+//			first.put(count++, pref.getNext());
+			System.out.print(pref.getNext()+" ");
+		System.out.println();
 		
 		HashMap<Integer, Integer> second=new HashMap<Integer, Integer>();
 		for(Integer i=1;i<=new Integer(args[0]);i++){
@@ -118,7 +124,7 @@ public class RingPreferences implements Preferences {
 		}
 //		System.out.println(second);
 //		System.out.println("===================================");
-		System.out.println("Valid:\t"+valid(first, second)+"\t\t"+new Integer(args[0])+"\t"+new Integer(args[1])+"\t"+new Integer(args[2]));
+//		System.out.println("Valid:\t"+valid(first, second)+"\t\t"+new Integer(args[0])+"\t"+new Integer(args[1])+"\t"+new Integer(args[2]));
 	}
 	
 	public static boolean valid(HashMap<Integer, Integer> first, HashMap<Integer, Integer> second){
@@ -136,7 +142,7 @@ public class RingPreferences implements Preferences {
 	
 	@Override
 	public void setNext(int rank) {
-		this.count=rank;
+		this.count=rank-1;
 		this.index=rank-1;
 	}
 }

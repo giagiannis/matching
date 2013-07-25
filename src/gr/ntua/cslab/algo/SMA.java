@@ -32,6 +32,11 @@ public class SMA extends AbstractStableMatchingAlgorithm{
 	}
 	
 	@Override
+	protected boolean terminationCondition() {
+		return this.men.hasSinglePeople();
+	}
+	
+	@Override
 	protected Iterator<Person> getIterator(PersonList proposers) {
 		return proposers.getSinglePersonIterator();
 	}

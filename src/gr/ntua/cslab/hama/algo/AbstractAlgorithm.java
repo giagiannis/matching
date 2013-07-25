@@ -14,6 +14,9 @@ public abstract class AbstractAlgorithm extends Worker{
 
 	private static boolean	verbose=true;
 	
+	public static int 	NO_SINGLES_CONDITION=1,
+						NO_UNHAPPY_CONDITION=2;
+	
 	private int workers=2;
 	private String dataMen, dataWomen;
 	private int inputSize;
@@ -80,7 +83,6 @@ public abstract class AbstractAlgorithm extends Worker{
 		
 	public static void execute(String args[], Class<? extends AbstractAlgorithm> myClass) throws Exception {
 		AbstractAlgorithm algo = myClass.getConstructor().newInstance(); 
-		
 		try {
 			algo.setInput(new Integer(args[0]));
 			if(args.length>1){

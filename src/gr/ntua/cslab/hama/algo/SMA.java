@@ -20,6 +20,11 @@ public class SMA extends AbstractAlgorithm {
 	protected boolean menPropose() {
 		return true;
 	}
+
+	@Override
+	protected int getTerminationCondition() {
+		return SMA.NO_SINGLES_CONDITION;
+	}
 	
 	public static void main(String[] args) throws Exception{
 		AbstractAlgorithm.execute(args, SMA.class);

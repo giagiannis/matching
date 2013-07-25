@@ -23,7 +23,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 	protected int numberOfMarriages=0;
 	private long execDuration;
 	
-	private int numberOfStepsTopPrintMessage=10; 
+	private int numberOfStepsTopPrintMessage=0; 
 	
 	/**
 	 * Empty constructor
@@ -116,12 +116,15 @@ public abstract class AbstractStableMatchingAlgorithm {
 	public void run() {
 		long start=System.currentTimeMillis();
 		this.stepCounter=0;
-//		while(this.men.hasSinglePeople() || this.women.hasSinglePeople()){
-		while(this.men.hasUnhappyPeople() || this.women.hasUnhappyPeople()){
+		while(this.terminationCondition()){
 			this.step();
 		}
 		
 		this.execDuration=System.currentTimeMillis()-start;
+	}
+	
+	protected boolean terminationCondition() {
+		return this.men.hasUnhappyPeople() || this.women.hasUnhappyPeople();
 	}
 	
 	/**
@@ -154,7 +157,19 @@ public abstract class AbstractStableMatchingAlgorithm {
 		cost = new SexEqualnessCost(this.men, this.women);
 		System.err.format("%.4f\t",cost.get());
 		cost = new GenderInequalityCost(this.men, this.women);
-		System.err.format("%.4f\n",cost.getPercentage());
+		System.err.format("%.4f\t",cost.get());
+		System.err.format("UM %d\t",this.countUnhappy(men));
+		System.err.format("UW %d\n",this.countUnhappy(women));
+	}
+	
+	private int countUnhappy(PersonList people){
+		Iterator<Person> it=people.getIterator();
+		int count=0;
+		while(it.hasNext()){
+			if(it.next().isMotivatedToBreakUp())
+				count++;
+		}
+		return count;
 	}
 	
 	/**
@@ -195,25 +210,30 @@ public abstract class AbstractStableMatchingAlgorithm {
 	
 	protected static void runStaticWithRingPreferences(Class<?> AlgorithmsClass, String[] args) throws InstantiationException, IllegalAccessException{
 		AbstractStableMatchingAlgorithm algo=(AbstractStableMatchingAlgorithm) AlgorithmsClass.newInstance();
+		int steps=0;
 		if(args.length<1){
-			System.err.println("I need at least one argument");
+			System.err.println("I need at least one argument (for ring preferences, two for file arguments)");
 			System.exit(1);
-		} else if (args.length==1) {
-			DatasetReader reader = new DatasetReader(new Integer(args[0]));
-			algo.setMen(reader.getPeople(DatasetReader.MEN));
-			algo.setWomen(reader.getPeople(DatasetReader.WOMEN));
-		} else if(args.length==2){
-			DatasetReader reader = new DatasetReader(args[0]);
-			algo.setMen(reader.getPeople());
-			reader = new DatasetReader(args[1]);
-			algo.setWomen(reader.getPeople());
 		} else {
-			System.err.println("Don't know what to do");
-			System.exit(1);
+			try {
+				DatasetReader reader = new DatasetReader(new Integer(args[0]));
+				algo.setMen(reader.getPeople(DatasetReader.MEN));
+				algo.setWomen(reader.getPeople(DatasetReader.WOMEN));
+				if(args.length>1){
+					steps=new Integer(args[1]);
+				}
+			} catch (NumberFormatException e) {
+				DatasetReader reader = new DatasetReader(args[0]);
+				algo.setMen(reader.getPeople());
+				reader = new DatasetReader(args[1]);
+				algo.setWomen(reader.getPeople());
+				if(args.length>2){
+					steps=new Integer(args[2]);
+				}
+			}
 		}
-//		algo.setStepOfMessage(100);
+		algo.setStepOfMessage(steps);
 		algo.run();
-//		algo.stepDiagnostics();
 		algo.performance();
 		System.out.println("\nUnstable Marriages:\t"+algo.resultIsStable());
 	}

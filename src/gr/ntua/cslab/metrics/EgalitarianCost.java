@@ -15,7 +15,7 @@ public class EgalitarianCost extends AbstractCost {
 
 	@Override
 	public double get() {
-		return EgalitarianCost.getRanksSum(this.men)+EgalitarianCost.getRanksSum(this.women);
+		return (EgalitarianCost.getRanksSum(this.men)+EgalitarianCost.getRanksSum(this.women))/2.0;
 	}
 	
 	@Override

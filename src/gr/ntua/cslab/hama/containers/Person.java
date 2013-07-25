@@ -99,7 +99,7 @@ public class Person {
 	
 	/**
 	 * Method used to review the proposals made. If the candidate partner (if any) is preferred than the current
-	 * partner, the methods returns true (indicating a new marriage), else it returns false.
+	 * partner, then a new marriage is committed, and the old partner id is returned.
 	 * @return
 	 */
 	public int reviewProposals(){
@@ -115,7 +115,7 @@ public class Person {
 			this.marry(this.candidateId);
 			this.candidateId=NOT_EXIST;
 			return old_partner;
-		} else																//somebody proposed, i'm married but i love my partner: no alteration
+		} else																//somebody proposed, i'm married but i love my partner: no changes are made
 			return NO_MARRIAGE;
 	}
 	

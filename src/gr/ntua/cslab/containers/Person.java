@@ -146,6 +146,7 @@ public class Person {
 		if(!this.isMarried() || this.getCurrentPartnerRank()>this.getCandidateRank()){		// the two couples are divorced and get married to each other
 			this.marry(this.candidatePartner);
 			this.preferences.setNext(this.getCurrentPartnerRank());
+//			this.preferences.setNext(1);
 			this.candidatePartner = null;
 			return true;
 		} else {

@@ -16,10 +16,13 @@ public class Message implements Writable {
 	public static int 	PROPOSAL_MESSAGE=1,
 						DIVORCE_MESSAGE=2,
 						ACCEPTANCE_MESSAGE=3,
-						SINGLES_COUNT_MESSAGE=4;
+						SINGLES_COUNT_MESSAGE=4,
+						UNHAPPY_COUNT_MESSAGE=5,
+						METRICS_MESSAGE;
 	private int type;
 	private int source;
 	private int destination;
+	private double metricValue;
 	
 	public Message() {
 		//default constructor
@@ -31,14 +34,23 @@ public class Message implements Writable {
 		this.destination=destination;
 	}
 	
-	public Message(int type, boolean hasSinglePeople){
-		if(hasSinglePeople)
+	public Message(int type, boolean condition){
+		if(condition)
 			this.source=1;
 		else
 			this.source=0;
 	}
 	
-	public boolean hasSinglePeople(){
+	public Message(double metricValue){
+		this.type=METRICS_MESSAGE;
+		this.metricValue = metricValue;	
+	}
+	
+	public double getMetricValue(){
+		return this.metricValue;
+	}
+	
+	public boolean getCondition(){
 		return (this.source==1);
 	}
 	
@@ -72,6 +84,7 @@ public class Message implements Writable {
 		this.setType(in.readInt());
 		this.setSource(in.readInt());
 		this.setDestination(in.readInt());
+		this.metricValue = in.readDouble();
 		
 	}
 
@@ -80,7 +93,7 @@ public class Message implements Writable {
 		out.writeInt(this.type);
 		out.writeInt(this.source);
 		out.writeInt(this.destination);
-		
+		out.writeDouble(this.metricValue);
 	}
 	
 	@Override
