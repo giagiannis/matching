@@ -124,6 +124,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 	}
 	
 	protected boolean terminationCondition() {
+//		return	this.men.hasSinglePeople(); 
 		return this.men.hasUnhappyPeople() || this.women.hasUnhappyPeople();
 	}
 	
@@ -159,7 +160,8 @@ public abstract class AbstractStableMatchingAlgorithm {
 		cost = new GenderInequalityCost(this.men, this.women);
 		System.err.format("%.4f\t",cost.get());
 		System.err.format("UM %d\t",this.countUnhappy(men));
-		System.err.format("UW %d\n",this.countUnhappy(women));
+		System.err.format("UW %d\t",this.countUnhappy(women));
+		System.err.println("Stability "+this.quickStable());
 	}
 	
 	private int countUnhappy(PersonList people){
@@ -235,6 +237,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 		algo.setStepOfMessage(steps);
 		algo.run();
 		algo.performance();
+		algo.stepDiagnostics();
 		System.out.println("\nUnstable Marriages:\t"+algo.resultIsStable());
 	}
 	
@@ -254,5 +257,21 @@ public abstract class AbstractStableMatchingAlgorithm {
 			}
 		}
 		return unstableMarriages;
+	}
+	
+	protected boolean quickStable(){
+		Iterator<Person> menIt = this.men.getIterator();
+		while(menIt.hasNext()){
+			Person p = menIt.next();
+			Iterator<Person> womenIt = this.women.getIterator();
+			while(womenIt.hasNext()){
+				Person current=womenIt.next();
+				if(		current.getCurrentPartnerRank()>current.getPreferences().getRank(p.getId()) &&
+						p.getCurrentPartnerRank() > p.getPreferences().getRank(current.getId())){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }
