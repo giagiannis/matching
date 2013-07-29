@@ -159,9 +159,10 @@ public abstract class AbstractStableMatchingAlgorithm {
 		System.err.format("%.4f\t",cost.get());
 		cost = new GenderInequalityCost(this.men, this.women);
 		System.err.format("%.4f\t",cost.get());
+		System.err.format("Sin %d\t",this.men.getNumberOfSingles());
 		System.err.format("UM %d\t",this.countUnhappy(men));
 		System.err.format("UW %d\t",this.countUnhappy(women));
-		System.err.println("Stability "+this.quickStable());
+		System.err.println("St "+this.quickStable());
 	}
 	
 	private int countUnhappy(PersonList people){
@@ -273,5 +274,9 @@ public abstract class AbstractStableMatchingAlgorithm {
 			}
 		}
 		return true;
+	}
+
+	protected int unmarriedMen(){
+		return this.men.getNumberOfSingles();
 	}
 }
