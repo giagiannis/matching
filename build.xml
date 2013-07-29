@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="matching" default="pack">
+<project name="matching" default="scp.jar">
 	<description>Ant buildfile for compiling and packing the src files. The default target is pack.</description>
 	<property name="src" location="src"/>
 	<property name="bin" location="bin"/>
 	<property name="lib" location="lib"/>
 	<property name="jar" location="pack.jar"/>
-	<!-- <property name="conf" location="conf"/>	 -->
+	<property name="tar" value="temp.tar"/>
+	<property name='remote' value='clone1.cslab.ece.ntua.gr'/>
 	
 	<path id="classpath">
 		<fileset dir="${lib}">
@@ -30,16 +31,31 @@
 		<delete dir="${bin}" file="${jar}"/>
 	</target>
 	
-	<!-- 
-	<target name="scp" depends="pack">
+	<target name="scp.jar" depends="pack">
 		<exec executable="scp" failonerror="true">
 			<arg value="${jar}"/>
-			<arg value="ggian@clone2.cslab.ece.ntua.gr:/local/ggian/"/>
-		</exec>
-		<exec executable="scp" failonerror="true">
-			<arg value="${conf}"/>
-			<arg value="ggian@clone2.cslab.ece.ntua.gr:/local/ggian/"/>
+			<arg value="ggian@${remote}:/local/ggian/"/>
 		</exec>
 	</target>
-	 -->
+	<target name="scp" depends="tar">
+		<exec executable="scp" failonerror="true">
+			<arg value="${jar}"/>
+			<arg value="${tar}"/>
+			<arg value="ggian@${remote}:/local/ggian/matching/"/>
+		</exec>
+		<delete file="${tar}"/>
+		<exec executable="ssh" failonerror="true">
+			<arg value="ggian@${remote}"/>
+			<arg value="rm -rf /local/ggian/matching/scripts/;
+						mkdir /local/ggian/matching/scripts/;
+						tar xfv /local/ggian/matching/${tar} -C /local/ggian/matching/scripts/;
+						rm /local/ggian/matching/${tar};
+						chmod +x /local/ggian/matching/scripts/*;"/>
+		</exec>
+	</target>
+	
+    <target name="tar" description="used to create a tar archive with jars and script and moves it to the destination">
+        <tar destfile="${tar}" basedir="scripts"></tar>
+    </target>
+
 </project>
