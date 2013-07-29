@@ -30,23 +30,18 @@
 		<delete dir="${bin}" file="${jar}"/>
 	</target>
 	
-	<target name="scp" depends="pack">
+<!--	<target name="scp" depends="pack">
 		<exec executable="scp" failonerror="true">
 			<arg value="${jar}"/>
 			<arg value="giannis@ggian:workspace/matching/"/>
 		</exec>
 
 	</target>
-	<!-- 
+	-->
 	<target name="scp" depends="pack">
 		<exec executable="scp" failonerror="true">
 			<arg value="${jar}"/>
-			<arg value="ggian@clone2.cslab.ece.ntua.gr:/local/ggian/"/>
-		</exec>
-		<exec executable="scp" failonerror="true">
-			<arg value="${conf}"/>
-			<arg value="ggian@clone2.cslab.ece.ntua.gr:/local/ggian/"/>
+			<arg value="ggian@clone1.cslab.ece.ntua.gr:/local/ggian/"/>
 		</exec>
 	</target>
-	 -->
 </project>
