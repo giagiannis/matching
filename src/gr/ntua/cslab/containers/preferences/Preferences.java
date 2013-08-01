@@ -38,5 +38,12 @@ public interface Preferences {
 	 * @param rank
 	 */
 	public void setNext(int rank);
+	
+	
+	/**
+	 * Returns the size of the preference lists.
+	 * @return
+	 */
+	public int getSize();
 
 }

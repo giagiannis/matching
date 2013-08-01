@@ -14,6 +14,8 @@ public class Person {
 	private Preferences preferences;
 	private Person partner;
 	private Person candidatePartner;
+	private int[] proposalsFrom, proposalsTo;
+	private int k=Integer.MAX_VALUE;
 	
 	/**
 	 * Constructor expecting the person's preferences
@@ -22,6 +24,8 @@ public class Person {
 	public Person(int id, Preferences preferences) {
 		this.preferences=preferences;
 		this.id=id;
+		this.proposalsFrom = new int[preferences.getSize()];
+		this.proposalsTo= new int[preferences.getSize()];
 	}
 	
 	/**
@@ -54,6 +58,14 @@ public class Person {
 	 */
 	public Preferences getPreferences(){
 		return this.preferences;
+	}
+	
+	public int getK(){
+		return this.k;
+	}
+	
+	public void setK(int k){
+		this.k=k;
 	}
 	
 	/**
@@ -125,7 +137,7 @@ public class Person {
 	 * @param p
 	 */
 	public boolean offer(Person p){
-		
+		this.proposalsTo[p.getId()-1]+=1;
 		if(p.getCandidate()==null){
 			p.setCandidate(this);
 		} else if(p.getCandidateRank() > p.getPreferences().getRank(this.getId())){
@@ -144,11 +156,14 @@ public class Person {
 			return false;
 		
 		if(!this.isMarried() || this.getCurrentPartnerRank()>this.getCandidateRank()){		// the two couples are divorced and get married to each other
+			this.proposalsFrom[this.candidatePartner.getId()-1]+=1;
+			if(this.proposalsFrom[this.candidatePartner.getId()-1]<=this.k){
 			this.marry(this.candidatePartner);
 			this.preferences.setNext(this.getCurrentPartnerRank());
-//			this.preferences.setNext(1);
 			this.candidatePartner = null;
 			return true;
+			}
+			return false;
 		} else {
 			this.candidatePartner = null;
 			return false;
@@ -179,11 +194,42 @@ public class Person {
 		return this.getPreferences().getRank(this.candidatePartner.getId());
 	}
 	
+	public boolean hasCycle(){
+		for(int i=0;i<this.proposalsTo.length;i++){
+			if(this.proposalsTo[i]>this.preferences.getRank(i+1)+1)
+				return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public String toString() {
 		String buffer="";
 		buffer+=this.id;
 		return buffer;
 
+	}
+	
+	public String toStringProposals(){
+		String buffer="";
+		for(int i=0;i<this.proposalsTo.length;i++){
+			if(this.proposalsTo[i]>0)
+				buffer+="{"+(i+1)+"["+this.preferences.getRank(i+1)+"]"+","+this.proposalsTo[i]+"} ";
+		}
+		buffer+="|";
+		for(int i=0;i<this.proposalsFrom.length;i++){
+			if(this.proposalsFrom[i]>0)
+				buffer+="{"+(i+1)+","+this.proposalsFrom[i]+"} ";
+		}
+		return buffer;
+	}
+	
+	public String toStringProposalsCycle(){
+		String buffer="";
+		for(int i=0;i<this.proposalsTo.length;i++){
+			if(this.proposalsTo[i]>this.preferences.getRank(i+1)+1)
+				buffer+="{"+(i+1)+"["+this.preferences.getRank(i+1)+"]"+","+this.proposalsTo[i]+"} ";
+		}
+		return buffer;
 	}
 }

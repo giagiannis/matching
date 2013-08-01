@@ -1,6 +1,11 @@
 package gr.ntua.cslab.algo;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 import gr.ntua.cslab.containers.Person;
 import gr.ntua.cslab.containers.PersonList;
@@ -48,6 +53,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 	 */
 	public void setMen(PersonList men){
 		this.men=men;
+		
 	}
 	
 	/**
@@ -119,12 +125,28 @@ public abstract class AbstractStableMatchingAlgorithm {
 		while(this.terminationCondition()){
 			this.step();
 		}
-		
 		this.execDuration=System.currentTimeMillis()-start;
+		System.out.println("Normal execution ended\tStarting to divorce people");
+		Iterator<Person> m = this.men.getIterator();
+		while(m.hasNext()){
+			Person mp = m.next();
+			if(mp.toStringProposals().contains(",2}")){
+				System.out.println(mp.toStringProposals());
+			}
+		}
+//		for(Entry<Person, LinkedList<Person>> e:this.getUnstableMen().entrySet()){
+//			e.getKey().divorce();
+//			e.getKey().getPreferences().setNext(1);
+//		}
+//		
+//		while(this.women.hasSinglePeople()){
+//			this.proposeStep(this.women);
+//		}
+//		System.out.println("bar");
+//		System.out.println(this.getUnstableMen());
 	}
 	
 	protected boolean terminationCondition() {
-//		return	this.men.hasSinglePeople(); 
 		return this.men.hasUnhappyPeople() || this.women.hasUnhappyPeople();
 	}
 	
@@ -146,7 +168,35 @@ public abstract class AbstractStableMatchingAlgorithm {
 		cost = new SexEqualnessCost(this.men, this.women);
 		System.out.format("%.4f\t",cost.get());
 		cost = new GenderInequalityCost(this.men, this.women);
-		System.out.format("%.4f",cost.getPercentage());
+		System.out.format("%.4f",cost.get());
+//		System.out.println("\n============== Instabilities ============\n");
+//		Iterator<Person> menIt = this.men.getIterator();
+//		while(menIt.hasNext()){
+//			Person p = menIt.next();
+//			Iterator<Person> womenIt = this.women.getIterator();
+//			while(womenIt.hasNext()){
+//				Person current=womenIt.next();
+//				if(		current.getCurrentPartnerRank()>current.getPreferences().getRank(p.getId()) &&
+//						p.getCurrentPartnerRank() > p.getPreferences().getRank(current.getId())){
+//					System.out.println("Man "+p.getId()+"["+p.getCurrentPartnerRank()+"] would prefer "+current.getId()+"["+p.getPreferences().getRank(current.getId())+"] and this works both ways");
+//				}
+//			}
+//		}
+//		Iterator<Person> foo = this.women.getIterator();
+//		while(foo.hasNext()){
+//			Person p = foo.next();
+//			Iterator<Person> bar = this.men.getIterator();
+//			while(bar.hasNext()){
+//				Person current=bar.next();
+//				if(		current.getCurrentPartnerRank()>current.getPreferences().getRank(p.getId()) &&
+//						p.getCurrentPartnerRank() > p.getPreferences().getRank(current.getId())){
+//					System.out.println("Woman "+p.getId()+"["+p.getCurrentPartnerRank()+"] would prefer "+current.getId()+"["+p.getPreferences().getRank(current.getId())+"] and this works both ways");
+//				}
+//			}
+//		}
+//		System.out.println(this.getUnstableMen());
+
+		
 	}
 	
 	protected void stepDiagnostics(){
@@ -162,7 +212,32 @@ public abstract class AbstractStableMatchingAlgorithm {
 		System.err.format("Sin %d\t",this.men.getNumberOfSingles());
 		System.err.format("UM %d\t",this.countUnhappy(men));
 		System.err.format("UW %d\t",this.countUnhappy(women));
-		System.err.println("St "+this.quickStable());
+		System.err.format("UnM %d\n",this.resultIsStable());
+		System.out.println("\t======= MEN =========");
+		Iterator<Person> it = this.men.getIterator();
+		while(it.hasNext()){
+			Person p = it.next();
+			if(p.hasCycle())
+				System.out.println(p+" creates cycle "+p.toStringProposalsCycle());
+		}
+		System.out.println("\t======= WOMEN =========");
+		it = this.women.getIterator();
+		while(it.hasNext()){
+			Person p = it.next();
+			if(p.hasCycle())
+				System.out.println(p+" creates cycle "+p.toStringProposalsCycle());
+		}
+//		Iterator<Person> it= this.men.getMotivatedToBreakUpIterator();
+//		while(it.hasNext()){
+//			Person p =it.next();
+//			System.out.println("\t"+p.getId()+" "+p.toStringProposals());
+//		}
+//		it= this.women.getMotivatedToBreakUpIterator();
+//		while(it.hasNext()){
+//			Person p =it.next();
+//			System.out.println("\t"+p.getId()+" "+p.toStringProposals());
+//		}
+//		System.err.println("St "+this.quickStable());
 	}
 	
 	private int countUnhappy(PersonList people){
@@ -243,20 +318,26 @@ public abstract class AbstractStableMatchingAlgorithm {
 	}
 	
 	protected int resultIsStable(){
+		Set<Person> set = new HashSet<Person>();
 		Iterator<Person> menIt = this.men.getIterator();
 		int unstableMarriages=0;
 		while(menIt.hasNext()){
 			Person p = menIt.next();
 			Iterator<Person> womenIt = this.women.getIterator();
+			int count=0;
 			while(womenIt.hasNext()){
 				Person current=womenIt.next();
 				if(		current.getCurrentPartnerRank()>current.getPreferences().getRank(p.getId()) &&
 						p.getCurrentPartnerRank() > p.getPreferences().getRank(current.getId())){
-					System.out.println(current.getId()+" prefers "+p.getId());
-					unstableMarriages++;
+					set.add(current);
+					if(count==0){
+						count++;
+					}
 				}
 			}
+			unstableMarriages+=count;
 		}
+//		System.out.print("\t"+set+"\t");
 		return unstableMarriages;
 	}
 	
@@ -275,8 +356,25 @@ public abstract class AbstractStableMatchingAlgorithm {
 		}
 		return true;
 	}
-
-	protected int unmarriedMen(){
-		return this.men.getNumberOfSingles();
+	
+	@SuppressWarnings("unused")
+	private Map<Person, LinkedList<Person>> getUnstableMen(){
+		Map<Person, LinkedList<Person>> results = new HashMap<Person,LinkedList<Person>>();
+		Iterator<Person> it= this.men.getIterator();
+		while(it.hasNext()){
+			Person m = it.next();
+			Iterator<Person> itW = this.women.getIterator();
+			LinkedList<Person> myres = new LinkedList<Person>();
+			while(itW.hasNext()){
+				Person w = itW.next();
+				if(	m.getCurrentPartnerRank() > m.getPreferences().getRank(w.getId()) && 
+					w.getCurrentPartnerRank() > w.getPreferences().getRank(m.getId())	){
+					myres.add(w);
+				}
+			}
+			if(!myres.isEmpty())
+				results.put(m, myres);
+		}
+		return results;
 	}
 }

@@ -35,6 +35,9 @@ public class PersonList {
 	 * @return
 	 */
 	public Person get(int id){
+		if(id<1){
+			System.err.println("I've been asked to deliver "+id);
+		}
 		return this.people[id-1];
 	}
 	
@@ -101,6 +104,18 @@ public class PersonList {
 		Iterator<Person> it = this.getMotivatedToBreakUpIterator();
 		return it.hasNext();
 	}
+	
+	public int countPeopleWithCycles(){
+		Iterator<Person> it= this.getIterator();
+		int count=0;
+		while(it.hasNext()){
+			Person p = it.next();
+			if(p.hasCycle())
+				count++;
+		}
+		return count;
+	}
+	
 	/**
 	 * Returns all the partners ranks (according to the people contained in PersonList) as an array.
 	 * @return
@@ -129,6 +144,8 @@ public class PersonList {
 		}
 		return count;
 	}
+	
+	
 	
 	@Override
 	public String toString() {

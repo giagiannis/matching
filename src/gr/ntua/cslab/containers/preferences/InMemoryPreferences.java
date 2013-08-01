@@ -131,4 +131,9 @@ public class InMemoryPreferences implements Preferences {
 		while(pref.hasMore())
 			System.out.println(pref.getNext());
 	}
+
+	@Override
+	public int getSize() {
+		return this.preferencesOrderedById.length;
+	}
 }
