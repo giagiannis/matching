@@ -15,17 +15,23 @@ public class Person {
 	private Person partner;
 	private Person candidatePartner;
 	private int[] proposalsFrom, proposalsTo;
+	private int[] setNextCounter;
 	private int k=Integer.MAX_VALUE;
+	private boolean monotonic=false;
+	private int type;
 	
 	/**
 	 * Constructor expecting the person's preferences
+	 * @param id 
 	 * @param preferences
 	 */
-	public Person(int id, Preferences preferences) {
+	public Person(int type, int id, Preferences preferences) {
+		this.type=type;
 		this.preferences=preferences;
 		this.id=id;
 		this.proposalsFrom = new int[preferences.getSize()];
 		this.proposalsTo= new int[preferences.getSize()];
+		this.setNextCounter = new int[preferences.getSize()];
 	}
 	
 	/**
@@ -138,6 +144,7 @@ public class Person {
 	 */
 	public boolean offer(Person p){
 		this.proposalsTo[p.getId()-1]+=1;
+		//System.out.println(this.toString()+" says:\t proposing to "+p+"["+this.getPreferences().getRank(p.getId())+"]");
 		if(p.getCandidate()==null){
 			p.setCandidate(this);
 		} else if(p.getCandidateRank() > p.getPreferences().getRank(this.getId())){
@@ -156,11 +163,18 @@ public class Person {
 			return false;
 		
 		if(!this.isMarried() || this.getCurrentPartnerRank()>this.getCandidateRank()){		// the two couples are divorced and get married to each other
+			if(this.isMarried()){
+				//System.out.println(this.toString()+" says:\t divorcing "+this.getCurrentPartner().toString()+"["+this.getCurrentPartnerRank()+"]");
+			}
 			this.proposalsFrom[this.candidatePartner.getId()-1]+=1;
 			if(this.proposalsFrom[this.candidatePartner.getId()-1]<=this.k){
 			this.marry(this.candidatePartner);
-			this.preferences.setNext(this.getCurrentPartnerRank());
+			if(!this.monotonic){
+				this.preferences.setNext(this.getCurrentPartnerRank());
+				this.setNextCounter[this.getCurrentPartnerRank()-1]+=1;
+			}
 			this.candidatePartner = null;
+			//System.out.println(this.toString()+" says:\t new partner "+this.getCurrentPartner().toString()+"["+this.getCurrentPartnerRank()+"]");
 			return true;
 			}
 			return false;
@@ -195,16 +209,31 @@ public class Person {
 	}
 	
 	public boolean hasCycle(){
-		for(int i=0;i<this.proposalsTo.length;i++){
-			if(this.proposalsTo[i]>this.preferences.getRank(i+1)+1)
+//		for(int i=0;i<this.proposalsTo.length;i++){
+//			if(this.proposalsTo[i]>this.preferences.getRank(i+1)+1)
+//				return true;
+//		}
+		for(int i=0;i<this.setNextCounter.length;i++){
+			if(this.setNextCounter[i]>1)
 				return true;
 		}
+
 		return false;
+	}
+	
+	public void resetCounters(){
+		for(int i=0;i<this.setNextCounter.length;i++){
+			this.setNextCounter[i]=0;
+		}
 	}
 	
 	@Override
 	public String toString() {
 		String buffer="";
+		if(this.type=='m')
+			buffer+='m';
+		else
+			buffer+='w';
 		buffer+=this.id;
 		return buffer;
 
@@ -224,11 +253,18 @@ public class Person {
 		return buffer;
 	}
 	
+	public void setMonotonicity(boolean flag){
+		this.monotonic=flag;
+	}
+	
+	public boolean getMonotonicity(){
+		return this.monotonic;
+	}
 	public String toStringProposalsCycle(){
 		String buffer="";
-		for(int i=0;i<this.proposalsTo.length;i++){
-			if(this.proposalsTo[i]>this.preferences.getRank(i+1)+1)
-				buffer+="{"+(i+1)+"["+this.preferences.getRank(i+1)+"]"+","+this.proposalsTo[i]+"} ";
+		for(int id=1;id<=this.proposalsTo.length;id++){		//order by id
+			if(this.proposalsTo[id-1]>this.preferences.getRank(id)+1)
+				buffer+="{"+(id)+"["+this.preferences.getRank(id)+"]"+","+this.proposalsTo[id-1]+"} ";
 		}
 		return buffer;
 	}

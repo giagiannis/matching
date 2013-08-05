@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import gr.ntua.cslab.containers.Person;
@@ -124,26 +125,43 @@ public abstract class AbstractStableMatchingAlgorithm {
 		this.stepCounter=0;
 		while(this.terminationCondition()){
 			this.step();
+			System.out.print(this.getStepCounter()+"\t");
+			Iterator<Person> it = this.men.getIterator();
+			while(it.hasNext()){
+				Person p = it.next();
+				if(p.getPreferences().getNextRank()>1)
+					System.out.print((p.getPreferences().getNextRank()-1)+"\t");
+				else
+					System.out.print((p.getPreferences().getNextRank())+"\t");
+			}
+			it = this.women.getIterator();
+			while(it.hasNext()){
+				Person p = it.next();
+				if(p.getPreferences().getNextRank()>1)
+					System.out.print((p.getPreferences().getNextRank()-1)+"\t");
+				else
+					System.out.print((p.getPreferences().getNextRank())+"\t");
+			}
+			System.out.println();
+			if(this.getStepCounter()==10000)
+				System.exit(1);
+		}
+
+		
+
+		System.out.println("Termination of loops at step "+this.getStepCounter());
+		while(this.men.hasUnhappyPeople()){
+			this.proposeStep(this.men);
+		}
+//		it = this.women.getIterator();
+//		while(it.hasNext()){
+//			it.next().resetCounters();
+//		}
+		System.out.println("Termination of men at step "+this.getStepCounter());
+		while(this.women.hasUnhappyPeople()){
+			this.proposeStep(this.women);
 		}
 		this.execDuration=System.currentTimeMillis()-start;
-		System.out.println("Normal execution ended\tStarting to divorce people");
-		Iterator<Person> m = this.men.getIterator();
-		while(m.hasNext()){
-			Person mp = m.next();
-			if(mp.toStringProposals().contains(",2}")){
-				System.out.println(mp.toStringProposals());
-			}
-		}
-//		for(Entry<Person, LinkedList<Person>> e:this.getUnstableMen().entrySet()){
-//			e.getKey().divorce();
-//			e.getKey().getPreferences().setNext(1);
-//		}
-//		
-//		while(this.women.hasSinglePeople()){
-//			this.proposeStep(this.women);
-//		}
-//		System.out.println("bar");
-//		System.out.println(this.getUnstableMen());
 	}
 	
 	protected boolean terminationCondition() {
@@ -168,35 +186,7 @@ public abstract class AbstractStableMatchingAlgorithm {
 		cost = new SexEqualnessCost(this.men, this.women);
 		System.out.format("%.4f\t",cost.get());
 		cost = new GenderInequalityCost(this.men, this.women);
-		System.out.format("%.4f",cost.get());
-//		System.out.println("\n============== Instabilities ============\n");
-//		Iterator<Person> menIt = this.men.getIterator();
-//		while(menIt.hasNext()){
-//			Person p = menIt.next();
-//			Iterator<Person> womenIt = this.women.getIterator();
-//			while(womenIt.hasNext()){
-//				Person current=womenIt.next();
-//				if(		current.getCurrentPartnerRank()>current.getPreferences().getRank(p.getId()) &&
-//						p.getCurrentPartnerRank() > p.getPreferences().getRank(current.getId())){
-//					System.out.println("Man "+p.getId()+"["+p.getCurrentPartnerRank()+"] would prefer "+current.getId()+"["+p.getPreferences().getRank(current.getId())+"] and this works both ways");
-//				}
-//			}
-//		}
-//		Iterator<Person> foo = this.women.getIterator();
-//		while(foo.hasNext()){
-//			Person p = foo.next();
-//			Iterator<Person> bar = this.men.getIterator();
-//			while(bar.hasNext()){
-//				Person current=bar.next();
-//				if(		current.getCurrentPartnerRank()>current.getPreferences().getRank(p.getId()) &&
-//						p.getCurrentPartnerRank() > p.getPreferences().getRank(current.getId())){
-//					System.out.println("Woman "+p.getId()+"["+p.getCurrentPartnerRank()+"] would prefer "+current.getId()+"["+p.getPreferences().getRank(current.getId())+"] and this works both ways");
-//				}
-//			}
-//		}
-//		System.out.println(this.getUnstableMen());
-
-		
+		System.out.format("%.4f",cost.get());		
 	}
 	
 	protected void stepDiagnostics(){
@@ -209,35 +199,10 @@ public abstract class AbstractStableMatchingAlgorithm {
 		System.err.format("%.4f\t",cost.get());
 		cost = new GenderInequalityCost(this.men, this.women);
 		System.err.format("%.4f\t",cost.get());
-		System.err.format("Sin %d\t",this.men.getNumberOfSingles());
-		System.err.format("UM %d\t",this.countUnhappy(men));
-		System.err.format("UW %d\t",this.countUnhappy(women));
-		System.err.format("UnM %d\n",this.resultIsStable());
-		System.out.println("\t======= MEN =========");
-		Iterator<Person> it = this.men.getIterator();
-		while(it.hasNext()){
-			Person p = it.next();
-			if(p.hasCycle())
-				System.out.println(p+" creates cycle "+p.toStringProposalsCycle());
-		}
-		System.out.println("\t======= WOMEN =========");
-		it = this.women.getIterator();
-		while(it.hasNext()){
-			Person p = it.next();
-			if(p.hasCycle())
-				System.out.println(p+" creates cycle "+p.toStringProposalsCycle());
-		}
-//		Iterator<Person> it= this.men.getMotivatedToBreakUpIterator();
-//		while(it.hasNext()){
-//			Person p =it.next();
-//			System.out.println("\t"+p.getId()+" "+p.toStringProposals());
-//		}
-//		it= this.women.getMotivatedToBreakUpIterator();
-//		while(it.hasNext()){
-//			Person p =it.next();
-//			System.out.println("\t"+p.getId()+" "+p.toStringProposals());
-//		}
-//		System.err.println("St "+this.quickStable());
+		System.err.format("Singles %d\t",this.men.getNumberOfSingles());
+		System.err.format("Men-cyc: %d\t",this.men.countPeopleWithCycles());
+		System.err.format("Women-cyc: %d\t",this.women.countPeopleWithCycles());
+		System.err.format("Unstable Marriages %d\n",this.resultIsStable());
 	}
 	
 	private int countUnhappy(PersonList people){
@@ -264,6 +229,11 @@ public abstract class AbstractStableMatchingAlgorithm {
 	 * @param proposers
 	 */
 	protected void proposeStep(PersonList proposers){
+//		if(proposers==men){
+//			System.out.println("men speak (propose)");
+//		} else {
+//			System.out.println("women speak (propose)");
+//		}
 		this.stepCounter++;
 		PersonList acceptors;
 		if(proposers==this.men)
@@ -277,6 +247,13 @@ public abstract class AbstractStableMatchingAlgorithm {
 			Person acceptor=acceptors.get(proposer.getPreferences().getNext());
 			proposer.offer(acceptor);
 		}
+		
+//		if(proposers!=men){
+//			System.out.println("men speak (accept)");
+//		} else {
+//			System.out.println("women speak (accept)");
+//		}
+		
 		it = acceptors.getIterator();
 		while(it.hasNext())
 			if(it.next().reviewOffers())
@@ -323,19 +300,23 @@ public abstract class AbstractStableMatchingAlgorithm {
 		int unstableMarriages=0;
 		while(menIt.hasNext()){
 			Person p = menIt.next();
-			Iterator<Person> womenIt = this.women.getIterator();
-			int count=0;
-			while(womenIt.hasNext()){
-				Person current=womenIt.next();
-				if(		current.getCurrentPartnerRank()>current.getPreferences().getRank(p.getId()) &&
-						p.getCurrentPartnerRank() > p.getPreferences().getRank(current.getId())){
-					set.add(current);
-					if(count==0){
-						count++;
+			if(p.isMarried()){
+				Iterator<Person> womenIt = this.women.getIterator();
+				int count=0;
+				while(womenIt.hasNext()){
+					Person current=womenIt.next();
+					if(current.isMarried()){
+						if(		current.getCurrentPartnerRank()>current.getPreferences().getRank(p.getId()) &&
+								p.getCurrentPartnerRank() > p.getPreferences().getRank(current.getId())){
+							set.add(current);
+							if(count==0){
+								count++;
+							}
+						}
 					}
 				}
+				unstableMarriages+=count;
 			}
-			unstableMarriages+=count;
 		}
 //		System.out.print("\t"+set+"\t");
 		return unstableMarriages;

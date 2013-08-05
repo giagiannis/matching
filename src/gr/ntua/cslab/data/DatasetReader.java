@@ -24,6 +24,8 @@ public class DatasetReader {
 	private BufferedReader reader;
 	private boolean sortedByRank=true;
 	private int size;
+
+	private char type;
 	
 	/**
 	 * Alternative constructor, used to create a preference list using ring preferences.
@@ -34,6 +36,10 @@ public class DatasetReader {
 	
 	
 	public DatasetReader(String filename){
+		if(filename.contains("women"))
+			this.type='w';
+		else
+			this.type='m';
 		try {
 			this.reader = new BufferedReader(new FileReader(filename));
 		} catch (FileNotFoundException e) {
@@ -69,7 +75,7 @@ public class DatasetReader {
 			list = new PersonList(numOfPeople);
 			int id=1;
 			while(this.reader.ready()){
-				list.add(new Person(id++, new InMemoryPreferences(this.getIntArray(this.reader.readLine()), this.sortedByRank)));
+				list.add(new Person(this.type,id++, new InMemoryPreferences(this.getIntArray(this.reader.readLine()), this.sortedByRank)));
 			}
 			this.reader.close();
 		} catch (IOException e) {
@@ -84,10 +90,10 @@ public class DatasetReader {
 		PersonList list=new PersonList(this.size);
 		if(type==MEN){
 			for(int i=1; i<this.size+1;i++)
-				list.add(new Person(i, new RingPreferences(this.size, 5, i%(this.size/8)+1)));
+				list.add(new Person(this.type, i, new RingPreferences(this.size, 5, i%(this.size/8)+1)));
 		} else {
 			for(int i=1; i<this.size+1;i++)
-				list.add(new Person(i, new RingPreferences(this.size, 5, i%(this.size/8)+1)));
+				list.add(new Person(this.type, i, new RingPreferences(this.size, 5, i%(this.size/8)+1)));
 		}
 		return list;
 	}
