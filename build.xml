@@ -31,25 +31,24 @@
 		<delete dir="${bin}" file="${jar}"/>
 	</target>
 	
-<!--	<target name="scp" depends="pack">
-		<exec executable="scp" failonerror="true">
-			<arg value="${jar}"/>
-			<arg value="giannis@ggian:workspace/matching/"/>
-		</exec>
 
-	</target>
-	-->
 	<target name="scp" depends="pack">
+		<exec executable="tar" failonerror="true">
+			<arg value="cfvz"/>
+			<arg value="scripts.tar.gz"/>
+			<arg value="scripts"/>
+		</exec>
 		<exec executable="scp" failonerror="true">
 			<arg value="${jar}"/>
-			<arg value="giannis@ggian:${jar}"/>
+			<arg value="scripts.tar.gz"/>
+			<arg value="giannis@ggian:/tmp/"/>
 		</exec>
 	</target>
 	
 	<target name="deploy" depends="scp">
 		<exec executable="ssh" failonerror="true">
 			<arg value="giannis@ggian"/>
-			<arg value="scp ${jar} ${remote}"/>
+			<arg value="scp /tmp/pack.jar /tmp/scripts.tar.gz ${remote}"/>
 		</exec>
 	</target>
 </project>

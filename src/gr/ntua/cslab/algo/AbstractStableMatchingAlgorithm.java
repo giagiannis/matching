@@ -29,7 +29,8 @@ public abstract class AbstractStableMatchingAlgorithm {
 	protected int numberOfMarriages=0;
 	private long execDuration;
 	
-	private int numberOfStepsTopPrintMessage=0; 
+	private int numberOfStepsTopPrintMessage=0;
+	private int flipCoinPeriod=10; 
 	
 	/**
 	 * Empty constructor
@@ -123,44 +124,20 @@ public abstract class AbstractStableMatchingAlgorithm {
 	public void run() {
 		long start=System.currentTimeMillis();
 		this.stepCounter=0;
+		boolean detectedCycle=false;
+		Random rand = new Random();
 		while(this.terminationCondition()){
-			this.step();
-			System.out.print(this.getStepCounter()+"\t");
-			Iterator<Person> it = this.men.getIterator();
-			while(it.hasNext()){
-				Person p = it.next();
-				if(p.getPreferences().getNextRank()>1)
-					System.out.print((p.getPreferences().getNextRank()-1)+"\t");
-				else
-					System.out.print((p.getPreferences().getNextRank())+"\t");
+			if(detectedCycle){
+				if(this.getStepCounter()%this.flipCoinPeriod==0){
+					this.proposeStep((rand.nextBoolean()?this.men:this.women));
+				} else {
+					this.step();
+				}
+			} else {
+				this.step();
+				detectedCycle = (this.men.countPeopleWithCycles()>0 || this.women.countPeopleWithCycles()>0);
 			}
-			it = this.women.getIterator();
-			while(it.hasNext()){
-				Person p = it.next();
-				if(p.getPreferences().getNextRank()>1)
-					System.out.print((p.getPreferences().getNextRank()-1)+"\t");
-				else
-					System.out.print((p.getPreferences().getNextRank())+"\t");
-			}
-			System.out.println();
-			if(this.getStepCounter()==10000)
-				System.exit(1);
-		}
-
-		
-
-		System.out.println("Termination of loops at step "+this.getStepCounter());
-		while(this.men.hasUnhappyPeople()){
-			this.proposeStep(this.men);
-		}
-//		it = this.women.getIterator();
-//		while(it.hasNext()){
-//			it.next().resetCounters();
-//		}
-		System.out.println("Termination of men at step "+this.getStepCounter());
-		while(this.women.hasUnhappyPeople()){
-			this.proposeStep(this.women);
-		}
+		}	
 		this.execDuration=System.currentTimeMillis()-start;
 	}
 	
@@ -290,8 +267,11 @@ public abstract class AbstractStableMatchingAlgorithm {
 		algo.setStepOfMessage(steps);
 		algo.run();
 		algo.performance();
+//		System.out.println();
 		algo.stepDiagnostics();
-		System.out.println("\nUnstable Marriages:\t"+algo.resultIsStable());
+		if(!algo.quickStable()){
+			System.out.println("\n=======================\nUNSTABLE!!!!!!!!!!!!!!!!\n========================");
+		}
 	}
 	
 	protected int resultIsStable(){
@@ -357,5 +337,29 @@ public abstract class AbstractStableMatchingAlgorithm {
 				results.put(m, myres);
 		}
 		return results;
+	}
+	
+	private void showPreferencesPointer(){
+		System.out.print(this.getStepCounter()+"\t");
+		Iterator<Person> it = this.men.getIterator();
+		while(it.hasNext()){
+			Person p = it.next();
+			if(p.getPreferences().getNextRank()>1)
+				System.out.print((p.getPreferences().getNextRank()-1)+"\t");
+			else
+				System.out.print((p.getPreferences().getNextRank())+"\t");
+		}
+		it = this.women.getIterator();
+		while(it.hasNext()){
+			Person p = it.next();
+			if(p.getPreferences().getNextRank()>1)
+				System.out.print((p.getPreferences().getNextRank()-1)+"\t");
+			else
+				System.out.print((p.getPreferences().getNextRank())+"\t");
+		}
+		System.out.println();
+		if(this.getStepCounter()==10000)
+			System.exit(1);
+
 	}
 }
