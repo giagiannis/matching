@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="matching" default="scp">
+<project name="matching" default="deploy">
 	<description>Ant buildfile for compiling and packing the src files. The default target is pack.</description>
 	<property name="src" location="src"/>
 	<property name="bin" location="bin"/>
 	<property name="lib" location="lib"/>
 	<property name="jar" location="pack.jar"/>
+	<property name="remote" value="ggian@clone1:/local/ggian/"/>
 	<!-- <property name="conf" location="conf"/>	 -->
 	
 	<path id="classpath">
@@ -41,7 +42,14 @@
 	<target name="scp" depends="pack">
 		<exec executable="scp" failonerror="true">
 			<arg value="${jar}"/>
-			<arg value="ggian@clone1.cslab.ece.ntua.gr:/local/ggian/"/>
+			<arg value="giannis@ggian:${jar}"/>
+		</exec>
+	</target>
+	
+	<target name="deploy" depends="scp">
+		<exec executable="ssh" failonerror="true">
+			<arg value="giannis@ggian"/>
+			<arg value="scp ${jar} ${remote}"/>
 		</exec>
 	</target>
 </project>
