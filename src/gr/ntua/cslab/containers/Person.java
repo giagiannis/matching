@@ -11,14 +11,13 @@ public class Person {
 
 	private static Person STATE_BAKOURI=null;
 	private int id;
+	private int type;
 	private Preferences preferences;
 	private Person partner;
 	private Person candidatePartner;
-	private int[] proposalsFrom, proposalsTo;
-	private int[] setNextCounter;
-	private int k=Integer.MAX_VALUE;
-	private boolean monotonic=false;
-	private int type;
+	
+	private int proposeToCycle[];
+
 	
 	/**
 	 * Constructor expecting the person's preferences
@@ -29,9 +28,9 @@ public class Person {
 		this.type=type;
 		this.preferences=preferences;
 		this.id=id;
-		this.proposalsFrom = new int[preferences.getSize()];
-		this.proposalsTo= new int[preferences.getSize()];
-		this.setNextCounter = new int[preferences.getSize()];
+		this.proposeToCycle = new int[preferences.getSize()];
+		for(int i=0;i<this.proposeToCycle.length;i++)
+			this.proposeToCycle[i]=0;
 	}
 	
 	/**
@@ -66,14 +65,6 @@ public class Person {
 		return this.preferences;
 	}
 	
-	public int getK(){
-		return this.k;
-	}
-	
-	public void setK(int k){
-		this.k=k;
-	}
-	
 	/**
 	 * Marries the object with the specified person (both members of the marriage become aware of the marriage)
 	 * @param id
@@ -104,6 +95,7 @@ public class Person {
 	 * @return
 	 */
 	public boolean propose(Person p){
+		this.proposeToCycle[p.getId()-1]+=1;
 		if(!p.isMarried() || p.getPreferences().getRank(this.getId())<p.getCurrentPartnerRank()){
 			this.marry(p);
 			return true;
@@ -143,8 +135,9 @@ public class Person {
 	 * @param p
 	 */
 	public boolean offer(Person p){
-		this.proposalsTo[p.getId()-1]+=1;
 		//System.out.println(this.toString()+" says:\t proposing to "+p+"["+this.getPreferences().getRank(p.getId())+"]");
+		this.proposeToCycle[p.getId()-1]+=1;
+//		System.out.println(this.toStrCycle()+" proposes to "+p);
 		if(p.getCandidate()==null){
 			p.setCandidate(this);
 		} else if(p.getCandidateRank() > p.getPreferences().getRank(this.getId())){
@@ -161,28 +154,18 @@ public class Person {
 	public boolean reviewOffers(){
 		if(this.candidatePartner==null)
 			return false;
-		
+
+
 		if(!this.isMarried() || this.getCurrentPartnerRank()>this.getCandidateRank()){		// the two couples are divorced and get married to each other
-			if(this.isMarried()){
-				//System.out.println(this.toString()+" says:\t divorcing "+this.getCurrentPartner().toString()+"["+this.getCurrentPartnerRank()+"]");
-			}
-			this.proposalsFrom[this.candidatePartner.getId()-1]+=1;
-			if(this.proposalsFrom[this.candidatePartner.getId()-1]<=this.k){
 			this.marry(this.candidatePartner);
-			if(!this.monotonic){
-				this.preferences.setNext(this.getCurrentPartnerRank());
-				this.setNextCounter[this.getCurrentPartnerRank()-1]+=1;
-			}
+			this.preferences.setNext(this.getCurrentPartnerRank());
 			this.candidatePartner = null;
-			//System.out.println(this.toString()+" says:\t new partner "+this.getCurrentPartner().toString()+"["+this.getCurrentPartnerRank()+"]");
 			return true;
-			}
-			return false;
 		} else {
 			this.candidatePartner = null;
 			return false;
 		}
-	}
+}
 	
 	/**
 	 * Sets the candidate partner
@@ -209,22 +192,16 @@ public class Person {
 	}
 	
 	public boolean hasCycle(){
-//		for(int i=0;i<this.proposalsTo.length;i++){
-//			if(this.proposalsTo[i]>this.preferences.getRank(i+1)+1)
-//				return true;
-//		}
-		for(int i=0;i<this.setNextCounter.length;i++){
-			if(this.setNextCounter[i]>1)
+		for(int i=0;i<this.proposeToCycle.length;i++){
+			if(this.proposeToCycle[i]>i+2){
 				return true;
+			}
 		}
-
 		return false;
 	}
 	
 	public void resetCounters(){
-		for(int i=0;i<this.setNextCounter.length;i++){
-			this.setNextCounter[i]=0;
-		}
+
 	}
 	
 	@Override
@@ -236,36 +213,16 @@ public class Person {
 			buffer+='w';
 		buffer+=this.id;
 		return buffer;
-
 	}
 	
-	public String toStringProposals(){
-		String buffer="";
-		for(int i=0;i<this.proposalsTo.length;i++){
-			if(this.proposalsTo[i]>0)
-				buffer+="{"+(i+1)+"["+this.preferences.getRank(i+1)+"]"+","+this.proposalsTo[i]+"} ";
-		}
-		buffer+="|";
-		for(int i=0;i<this.proposalsFrom.length;i++){
-			if(this.proposalsFrom[i]>0)
-				buffer+="{"+(i+1)+","+this.proposalsFrom[i]+"} ";
-		}
-		return buffer;
-	}
-	
-	public void setMonotonicity(boolean flag){
-		this.monotonic=flag;
-	}
-	
-	public boolean getMonotonicity(){
-		return this.monotonic;
-	}
-	public String toStringProposalsCycle(){
-		String buffer="";
-		for(int id=1;id<=this.proposalsTo.length;id++){		//order by id
-			if(this.proposalsTo[id-1]>this.preferences.getRank(id)+1)
-				buffer+="{"+(id)+"["+this.preferences.getRank(id)+"]"+","+this.proposalsTo[id-1]+"} ";
-		}
-		return buffer;
+	public String toStrCycle(){
+		String buffer=toString()+"(";
+		int i=0;
+		for(i=0; i<this.proposeToCycle.length && this.proposeToCycle[i]<=i+1;i++);
+		
+		for(int j=i;j<this.proposeToCycle.length && this.proposeToCycle[j]>j ;j++)
+			buffer+=j+":"+this.proposeToCycle[j]+",\t";
+		return buffer.substring(0,buffer.length()-2)+")";
+			
 	}
 }

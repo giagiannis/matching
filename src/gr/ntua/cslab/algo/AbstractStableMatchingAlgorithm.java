@@ -221,7 +221,9 @@ public abstract class AbstractStableMatchingAlgorithm {
 		
 		while(it.hasNext()){
 			Person proposer = it.next();
-			Person acceptor=acceptors.get(proposer.getPreferences().getNext());
+			int next=proposer.getPreferences().getNext();
+			System.out.println("Next preference for proposer "+proposer+":"+next);
+			Person acceptor=acceptors.get(next);
 			proposer.offer(acceptor);
 		}
 		

@@ -45,5 +45,12 @@ public interface Preferences {
 	 * @return
 	 */
 	public int getSize();
+	
+	/**
+	 * Returns the id of the specified rank.
+	 * @param rank
+	 * @return
+	 */
+	public int getId(int rank);
 
 }

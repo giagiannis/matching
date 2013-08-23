@@ -150,4 +150,9 @@ public class RingPreferences implements Preferences {
 	public int getSize() {
 		return this.size;
 	}
+
+	@Override
+	public int getId(int rank) {
+		return 0;
+	}
 }

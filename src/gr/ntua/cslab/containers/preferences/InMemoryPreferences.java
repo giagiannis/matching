@@ -69,8 +69,9 @@ public class InMemoryPreferences implements Preferences {
 	 */
 	public int getNext(){
 		if(this.index>=this.preferencesOrderedByRank.length)
-			return InMemoryPreferences.NO_PREFERENCE;
-		else
+			this.index=0;
+//			return InMemoryPreferences.NO_PREFERENCE;
+//		else
 			return this.preferencesOrderedByRank[this.index++];
 	}
 	
@@ -99,7 +100,7 @@ public class InMemoryPreferences implements Preferences {
 	 */
 	public int getNextRank(){
 		if(this.index>=this.preferencesOrderedByRank.length)
-			return InMemoryPreferences.NO_PREFERENCE;
+			return this.preferencesOrderedById.length;
 		else
 			return this.index+1;
 	}
@@ -135,5 +136,11 @@ public class InMemoryPreferences implements Preferences {
 	@Override
 	public int getSize() {
 		return this.preferencesOrderedById.length;
+	}
+
+	@Override
+	public int getId(int rank) {
+		return this.preferencesOrderedByRank[rank-1];
+		
 	}
 }

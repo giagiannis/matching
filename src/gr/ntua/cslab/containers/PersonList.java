@@ -37,6 +37,7 @@ public class PersonList {
 	public Person get(int id){
 		if(id<1){
 			System.err.println("I've been asked to deliver "+id);
+//			System.exit(1);
 		}
 		return this.people[id-1];
 	}

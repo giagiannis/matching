@@ -1,8 +1,7 @@
 package gr.ntua.cslab.data;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Class used to create datasets. The class will create text files containing person's preferences
@@ -23,28 +22,16 @@ public class RandomDataGenerator extends Generator{
 	}
 	
 	@Override
-	protected void line(){
-		List<String> ordered = new ArrayList<String>();
-		for(Integer i=1;i<this.datasetSize+1;i++)
-			ordered.add(i.toString());
-		Collections.shuffle(ordered);
-		for(String d:ordered)
-			this.out.print(d+" ");
-		this.out.println();
+	protected LinkedList<Integer> line(){
+		LinkedList<Integer> res = new LinkedList<Integer>();
+		for(int i=1;i<=this.datasetSize;i++)
+			res.add(i);
+		Collections.shuffle(res);
+		return res;
 	}
 	
 	public static void main(String[] args) {
-		if(args.length<1){
-			System.err.println("I need size of dataset");
-			System.exit(1);
-		}
-		
-		RandomDataGenerator gen = new RandomDataGenerator();
-		gen.setDatasetSize(new Integer(args[0]));
-		if(args.length>1)
-			gen.setOutputFile(args[1]);
-		gen.create();
-		
+		Generator.runStatic(RandomDataGenerator.class, args);		
 	}
 
 }
