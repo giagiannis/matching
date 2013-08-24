@@ -5,15 +5,14 @@ PICS_DIR="pics/"
 mkdir $PICS_DIR
 
 PLOT_NAME[2]='Number of steps'
-PLOT_NAME[3]='Number of marriages'
-PLOT_NAME[4]='Execution time (ms)'
-PLOT_NAME[5]='Regret cost'
-PLOT_NAME[6]='Egalitarian cost'
-PLOT_NAME[7]='Sex equalness cost (mean)'
-PLOT_NAME[8]='Inequality cost (median)'
+PLOT_NAME[3]='Execution time (ms)'
+PLOT_NAME[4]='Regret cost'
+PLOT_NAME[5]='Egalitarian cost'
+PLOT_NAME[6]='Sex equalness cost (mean)'
+PLOT_NAME[7]='Inequality cost (median)'
 
 PLOT_SCRIPT=`find . -name plot_one.sh`
-for i in `seq 2 8` ; do
+for i in `seq 2 7` ; do
 	export PLOT_TITLE=${PLOT_NAME[$i]};
 	$PLOT_SCRIPT $i $PICS_DIR $1
 done

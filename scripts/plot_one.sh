@@ -4,12 +4,11 @@
 # second argument is used to point to the output path
 
 LABEL[1]='SMA';
-LABEL[2]='NESMA';
-LABEL[3]='ESMA';
-LABEL[4]='RESMA';
-LABEL[5]='AAESMA';
-LABEL[6]='AAESMADiff';
-LABEL[7]='AAAESMA';
+LABEL[2]='ESMA';
+LABEL[3]='RESMA';
+LABEL[4]='AAESMA';
+LABEL[5]='AAESMAGrad';
+LABEL[6]='AAAESMA';
 
 #ALGORITHMS="SMA NESMA ESMA RESMA AAESMA AAESMADiff AAAESMA";
 
@@ -52,17 +51,16 @@ else
 	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"set title  '$PLOT_TITLE vs Dataset size'; set xlabel 'Dataset size'; set ylabel '$PLOT_TITLE'; plot ";
 fi
 
-
 echo -en "Creating plot with cols ";
 for i in `seq $START_COL $COUNT`; do
-	COL=$[$[$i-1]*7+$1];
+	COL=$[$[$i-1]*6+$1];
 	echo -n $COL" "
 	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"'$OUTPUT_FILE' using 1:$COL with lines title '${LABEL[$i]}'";
 	if [ $i -lt $COUNT ]; then 
 		GNUPLOT_COMMAND=$GNUPLOT_COMMAND", "	
 	fi
 done
-echo 
+echo
 gnuplot -p -e  "$GNUPLOT_COMMAND";
 
 

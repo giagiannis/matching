@@ -43,7 +43,7 @@ if [ -z "$JVM_FLAGS" ]; then
 fi
 
 if [ -z "$ALGORITHMS" ]; then
-	ALGORITHMS="SMA NESMA ESMA RESMA AAESMA AAESMADiff AAAESMA";
+	ALGORITHMS="SMA ESMA RESMA AAESMA AAESMAGrad AAAESMA";
 fi
 
 
@@ -77,7 +77,7 @@ for i in `seq $1 $STEP $2`; do \
 		else
 			STEP_OUTPUT="$STEP_OUTPUT_DIR/size-$i-$ALGO.txt"
 		fi
-		EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algo.$ALGO $MEN $WOMEN";
+		EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algorithms.$ALGO $MEN $WOMEN ";
 		echo $EXEC;
 		$EXEC >> $OUTPUT 2>$STEP_OUTPUT;
 		echo -en "\t" >> $OUTPUT ;

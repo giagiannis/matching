@@ -20,8 +20,20 @@ public class GaussDataGenerator extends Generator {
 
 class ScoreLabel implements Comparable<ScoreLabel>{
 	private int label;
-	private int score;
+	private double score;
 	
+	public ScoreLabel(int label) {
+		this.label=label;
+		this.score=0.0;
+	}
+	
+	public int getLabel(){
+		return this.label;
+	}
+	
+	public void addScore(double score){
+		this.score+=score;
+	}
 	@Override
 	public int compareTo(ScoreLabel o) {
 		if(this.score < o.score)
