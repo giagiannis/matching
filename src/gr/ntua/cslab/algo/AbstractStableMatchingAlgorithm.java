@@ -22,6 +22,7 @@ import gr.ntua.cslab.metrics.SexEqualnessCost;
  * @author Giannis Giannakopoulos
  *
  */
+@SuppressWarnings("unused")
 public abstract class AbstractStableMatchingAlgorithm {
 
 	protected PersonList men, women;
@@ -182,16 +183,6 @@ public abstract class AbstractStableMatchingAlgorithm {
 		System.err.format("Unstable Marriages %d\n",this.resultIsStable());
 	}
 	
-	private int countUnhappy(PersonList people){
-		Iterator<Person> it=people.getIterator();
-		int count=0;
-		while(it.hasNext()){
-			if(it.next().isMotivatedToBreakUp())
-				count++;
-		}
-		return count;
-	}
-	
 	/**
 	 * Returns the current step.
 	 * @return
@@ -320,7 +311,6 @@ public abstract class AbstractStableMatchingAlgorithm {
 		return true;
 	}
 	
-	@SuppressWarnings("unused")
 	private Map<Person, LinkedList<Person>> getUnstableMen(){
 		Map<Person, LinkedList<Person>> results = new HashMap<Person,LinkedList<Person>>();
 		Iterator<Person> it= this.men.getIterator();
@@ -341,27 +331,27 @@ public abstract class AbstractStableMatchingAlgorithm {
 		return results;
 	}
 	
-	private void showPreferencesPointer(){
-		System.out.print(this.getStepCounter()+"\t");
-		Iterator<Person> it = this.men.getIterator();
-		while(it.hasNext()){
-			Person p = it.next();
-			if(p.getPreferences().getNextRank()>1)
-				System.out.print((p.getPreferences().getNextRank()-1)+"\t");
-			else
-				System.out.print((p.getPreferences().getNextRank())+"\t");
-		}
-		it = this.women.getIterator();
-		while(it.hasNext()){
-			Person p = it.next();
-			if(p.getPreferences().getNextRank()>1)
-				System.out.print((p.getPreferences().getNextRank()-1)+"\t");
-			else
-				System.out.print((p.getPreferences().getNextRank())+"\t");
-		}
-		System.out.println();
-		if(this.getStepCounter()==10000)
-			System.exit(1);
-
-	}
+//	private void showPreferencesPointer(){
+//		System.out.print(this.getStepCounter()+"\t");
+//		Iterator<Person> it = this.men.getIterator();
+//		while(it.hasNext()){
+//			Person p = it.next();
+//			if(p.getPreferences().getNextRank()>1)
+//				System.out.print((p.getPreferences().getNextRank()-1)+"\t");
+//			else
+//				System.out.print((p.getPreferences().getNextRank())+"\t");
+//		}
+//		it = this.women.getIterator();
+//		while(it.hasNext()){
+//			Person p = it.next();
+//			if(p.getPreferences().getNextRank()>1)
+//				System.out.print((p.getPreferences().getNextRank()-1)+"\t");
+//			else
+//				System.out.print((p.getPreferences().getNextRank())+"\t");
+//		}
+//		System.out.println();
+//		if(this.getStepCounter()==10000)
+//			System.exit(1);
+//
+//	}
 }
