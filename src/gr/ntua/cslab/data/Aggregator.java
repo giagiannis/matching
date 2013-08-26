@@ -97,14 +97,14 @@ public class Aggregator {
 	private String getAverageOfColumn(String[] values){
 		Double sum=0.0;
 		for(int i=0;i<values.length;i++){
-			try{	
-				sum+=Math.abs(new Integer(values[i]));
+			try{
+				sum+=Math.abs(new Integer(values[i].trim()));
 			} catch (NumberFormatException e){
-				sum+=Math.abs(new Double (values[i]));
+				sum+=Math.abs(new Double (values[i].trim()));
 			}
 		}
 		sum/=values.length;
-		return String.format("%.2f",sum);
+		return String.format("%.5f",sum);
 	}
 	
 	public static void main(String[] args) {

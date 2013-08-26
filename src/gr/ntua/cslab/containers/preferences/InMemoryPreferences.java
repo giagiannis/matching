@@ -10,7 +10,7 @@ public class InMemoryPreferences implements Preferences {
 	
 	private int[] preferencesOrderedByRank;
 	private int[] preferencesOrderedById;
-	private int index=0;
+	private PrunedPreferences pruned;
 	
 	/**
 	 * Empty constructor (does nothing).
@@ -29,6 +29,7 @@ public class InMemoryPreferences implements Preferences {
 			this.setPreferencesOrderedByRank(preferences);
 		else
 			this.setPreferencesOrderedById(preferences);
+		this.pruned = new PrunedPreferences(preferences.length);
 	}
 	
 	/**
@@ -68,11 +69,10 @@ public class InMemoryPreferences implements Preferences {
 	 * @return
 	 */
 	public int getNext(){
-		if(this.index>=this.preferencesOrderedByRank.length)
-			this.index=0;
-//			return InMemoryPreferences.NO_PREFERENCE;
-//		else
-			return this.preferencesOrderedByRank[this.index++];
+//		if(this.index>=this.preferencesOrderedByRank.length)
+//			this.index=0;
+//		return this.preferencesOrderedByRank[this.index++];
+		return this.preferencesOrderedByRank[this.pruned.getNext()-1];
 	}
 	
 	/**
@@ -80,7 +80,8 @@ public class InMemoryPreferences implements Preferences {
 	 * @return
 	 */
 	public boolean hasMore(){
-		return this.index<this.preferencesOrderedByRank.length;
+//		return this.index<this.preferencesOrderedByRank.length;
+		return pruned.hasMorePreferences();
 	}
 	
 	/**
@@ -99,15 +100,17 @@ public class InMemoryPreferences implements Preferences {
 	 * @return
 	 */
 	public int getNextRank(){
-		if(this.index>=this.preferencesOrderedByRank.length)
-			return this.preferencesOrderedById.length;
-		else
-			return this.index+1;
+		return this.pruned.getNextPreference();
+//		if(this.index>=this.preferencesOrderedByRank.length)
+//			return this.preferencesOrderedById.length;
+//		else
+//			return this.index+1;
 	}
 	@Override
-	public void setNext(int rank) {
-		if(rank<this.index && rank>0)
-			this.index=rank-1;
+	public void addNext(int rank) {
+		this.pruned.addPreference(rank);
+//		if(rank<this.index && rank>0)
+//			this.index=rank-1;
 		
 	}
 	 
@@ -123,15 +126,15 @@ public class InMemoryPreferences implements Preferences {
 		return buffer.substring(0, buffer.length()-1);
 	}
 	
-	public static void main(String[] args) {
-		int[] foo = {1,5,4,2,3};
-		InMemoryPreferences pref = new InMemoryPreferences(foo, true);
-		while(pref.hasMore())
-			System.out.println(pref.getNext());
-		pref.setNext(3);
-		while(pref.hasMore())
-			System.out.println(pref.getNext());
-	}
+//	public static void main(String[] args) {
+//		int[] foo = {1,5,4,2,3};
+//		InMemoryPreferences pref = new InMemoryPreferences(foo, true);
+//		while(pref.hasMore())
+//			System.out.println(pref.getNext());
+//		pref.setNext(3);
+//		while(pref.hasMore())
+//			System.out.println(pref.getNext());
+//	}
 
 	@Override
 	public int getSize() {

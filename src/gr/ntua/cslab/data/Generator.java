@@ -14,7 +14,6 @@ public abstract class Generator {
 	private int flushThr;
 	
 	public Generator() {
-		// TODO Auto-generated constructor stub
 		this.buffer = new LinkedList<LinkedList<Integer>>();
 	}
 	

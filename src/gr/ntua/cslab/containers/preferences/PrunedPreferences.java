@@ -45,6 +45,11 @@ public class PrunedPreferences {
 		return head;
 	}
 	
+	public int getNextPreference(){
+		return this.prefereneces.first();
+		
+	}
+	
 	/**
 	 * True if the preference list contains more values, else false.
 	 * @return
@@ -55,7 +60,7 @@ public class PrunedPreferences {
 	
 	public static void main(String[] args) {
 		PrunedPreferences pref = new PrunedPreferences(10);
-		for(int i=0;i<8;i++)System.out.println(pref.getNext());
+		for(int i=0;i<6;i++)System.out.println(pref.getNext());
 		pref.addPreference(2);
 		
 		pref.addPreference(5);

@@ -137,6 +137,7 @@ public class Person {
 	public boolean offer(Person p){
 		//System.out.println(this.toString()+" says:\t proposing to "+p+"["+this.getPreferences().getRank(p.getId())+"]");
 		this.proposeToCycle[p.getId()-1]+=1;
+		p.getPreferences().addNext(p.getPreferences().getRank(this.getId()));
 //		System.out.println(this.toStrCycle()+" proposes to "+p);
 		if(p.getCandidate()==null){
 			p.setCandidate(this);
@@ -158,7 +159,7 @@ public class Person {
 
 		if(!this.isMarried() || this.getCurrentPartnerRank()>this.getCandidateRank()){		// the two couples are divorced and get married to each other
 			this.marry(this.candidatePartner);
-			this.preferences.setNext(this.getCurrentPartnerRank());
+//			this.preferences.addNext(this.getCurrentPartnerRank());
 			this.candidatePartner = null;
 			return true;
 		} else {

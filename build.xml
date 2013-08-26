@@ -5,7 +5,8 @@
 	<property name="bin" location="bin"/>
 	<property name="lib" location="lib"/>
 	<property name="jar" location="pack.jar"/>
-	<property name="remote" value="ggian@clone1:/local/ggian/"/>
+	<property name="remote.host" value="ggian@clone1"/>
+	<property name="remote.dir" value="/local/ggian/"/>
 	<!-- <property name="conf" location="conf"/>	 -->
 	
 	<path id="classpath">
@@ -43,12 +44,20 @@
 			<arg value="scripts.tar.gz"/>
 			<arg value="giannis@ggian:/tmp/"/>
 		</exec>
+		<delete file="scripts.tar.gz"/>
 	</target>
 	
 	<target name="deploy" depends="scp">
 		<exec executable="ssh" failonerror="true">
 			<arg value="giannis@ggian"/>
-			<arg value="scp /tmp/pack.jar /tmp/scripts.tar.gz ${remote}"/>
+			<arg value="scp /tmp/pack.jar /tmp/scripts.tar.gz ${remote.host}:${remote.dir}"/>
+		</exec>
+		<exec executable="ssh" failonerror="true">
+			<arg value="${remote.host}"/>
+			<arg value="	rm -rfv ${remote.dir}/scripts; 
+							tar xfvz ${remote.dir}/scripts.tar.gz -C ${remote.dir};
+							rm -rfv ${remote.dir}/scripts.tar.gz;
+						"/>
 		</exec>
 	</target>
 </project>
