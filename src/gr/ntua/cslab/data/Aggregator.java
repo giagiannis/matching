@@ -96,14 +96,24 @@ public class Aggregator {
 	
 	private String getAverageOfColumn(String[] values){
 		Double sum=0.0;
+		double min=Double.MAX_VALUE, max=Double.MIN_VALUE;
 		for(int i=0;i<values.length;i++){
 			try{
-				sum+=Math.abs(new Integer(values[i].trim()));
+				int value=new Integer(values[i].trim());
+				sum+=Math.abs(value);
+				max=(value>max?value:max);
+				min=(value<min?value:min);
 			} catch (NumberFormatException e){
-				sum+=Math.abs(new Double (values[i].trim()));
+				double value=new Double (values[i].trim());
+				sum+=Math.abs(value);
+				max=(value>max?value:max);
+				min=(value<min?value:min);
 			}
 		}
 		sum/=values.length;
+		System.out.print("Max:\t"+max+"\t");
+		System.out.print("Sum:\t"+sum+"\t");
+		System.out.println("Min:\t"+min);
 		return String.format("%.5f",sum);
 	}
 	
