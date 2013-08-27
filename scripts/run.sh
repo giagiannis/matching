@@ -6,7 +6,7 @@ if [ $# -lt 2 ]; then
 	echo "Usage: $0 <start> <stop>"
 	echo -e "Variables to set:\n\
 	DATASET_DIR:\twhere is the dataset located (defalt is data)\n\
-	DATASET_DIR:\twhere is the dataset located for women (defalt points to DATASET_DIR)\n\
+	DATASET_DIR_WOMEN:\twhere is the dataset located for women (defalt points to DATASET_DIR)\n\
 	STEP:\t\tstep size (default is 100)\n\
 	JVM_FLAGS:\tjvm flags -memory et al- (default is -Xmx2g)\n\
 	STEP_OUTPUT_DIR:\twhere will the step output exist (default is /dev/null)\n\
@@ -38,7 +38,7 @@ fi
 
 # jvm variables 
 if [ -z "$JVM_FLAGS" ]; then
-	JVM_FLAGS="-Xmx2g";
+	JVM_FLAGS="-Xmx7g";
 	echo "Default JVM flags: $JVM_FLAGS"
 fi
 
@@ -51,10 +51,14 @@ OUTPUT_DIRECTORY=output
 OUTPUT_FILE="output`date \"+%y%m%d_%H%M%S\"`.txt"
 OUTPUT=$OUTPUT_DIRECTORY/$OUTPUT_FILE
 
-MESSAGE="#<men> <#steps SMA> <#marriages SMA> <exec duration SMA> <regret cost> <egalitarian cost> <sex equalness cost> <gender inequality costSMA>\n"
-MESSAGE=$MESSAGE"#each of the described costs are provided for each algorithms next to each other"
+MESSAGE="# Algorithms order:\n"
+MESSAGE=$MESSAGE"#\t$ALGORITHMS\n"
+MESSAGE=$MESSAGE"# Each metric is described in the source code. The default order of metrics (per algorithm) is:\n"
+MESSAGE=$MESSAGE"#\t<data size -unique-> <# steps> <exec time (ms)> <rc> <ec> <sec> <ic>\n"
+MESSAGE=$MESSAGE"#\n"
+MESSAGE=$MESSAGE"# Automatically generated message. Created: `date`"
 
-echo $MESSAGE > $OUTPUT
+echo -e $MESSAGE > $OUTPUT
 
 if [ $# -lt 2 ]; then
 	exit 1
