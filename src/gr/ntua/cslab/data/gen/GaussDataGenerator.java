@@ -7,7 +7,7 @@ import java.util.Random;
 public class GaussDataGenerator extends Generator {
 
 	private Random random;
-	private int skeweness=1;
+	private double skeweness=1;
 	public GaussDataGenerator() {
 		this.random = new Random();
 	}
@@ -17,7 +17,7 @@ public class GaussDataGenerator extends Generator {
 		this.random = new Random();
 	}
 	
-	public void setSkewenessFactor(int skeweness){
+	public void setSkewenessFactor(double skeweness){
 		this.skeweness=skeweness;
 	}
 
@@ -27,11 +27,10 @@ public class GaussDataGenerator extends Generator {
 		for(int i=0;i<this.datasetSize;i++){
 			ScoreLabel sl =new ScoreLabel(i+1);
 			sl.addScore(i+1);
+			sl.addScore((this.random.nextGaussian())*this.skeweness);
 			list.add(sl);
 		}
-		for(ScoreLabel sl:list){
-			sl.addScore((this.random.nextGaussian())*this.skeweness);
-		}
+		
 		Collections.sort(list);
 		LinkedList<Integer> result = new LinkedList<Integer>();
 		for(ScoreLabel sl:list){
@@ -49,7 +48,7 @@ public class GaussDataGenerator extends Generator {
 		if(args.length<2){
 			System.err.println("Zero polarity is used");
 		} else {
-			gen.setSkewenessFactor(new Integer(args[1]));
+			gen.setSkewenessFactor(new Double(args[1]));
 		}
 		gen.setDatasetSize(new Integer(args[0]));
 		gen.create();
