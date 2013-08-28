@@ -24,6 +24,10 @@ public class PrunedPreferences {
 	 * @return
 	 */
 	public boolean addPreference(int rank){
+		if(this.prefereneces.isEmpty()){
+			this.prefereneces.add(rank);
+			return true;
+		}
 		if(rank > this.prefereneces.last())
 			return false;
 		if(rank == this.prefereneces.last()-1)
@@ -37,6 +41,8 @@ public class PrunedPreferences {
 	 * @return
 	 */
 	public int getNext(){
+		if(this.prefereneces.isEmpty())
+			this.prefereneces.add(1);
 		Integer head = this.prefereneces.first();
 		this.prefereneces.remove(head);
 		if(this.prefereneces.size()==0 && (head+1<=this.size)){
@@ -46,7 +52,10 @@ public class PrunedPreferences {
 	}
 	
 	public int getNextPreference(){
-		return this.prefereneces.first();
+		if(!this.prefereneces.isEmpty())
+			return this.prefereneces.first();
+		else
+			return Integer.MAX_VALUE;
 		
 	}
 	

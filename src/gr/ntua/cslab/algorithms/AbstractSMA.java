@@ -74,8 +74,8 @@ public abstract class AbstractSMA {
 		}
 		this.executionTime=System.currentTimeMillis()-this.executionTime;
 		System.out.print(this.stepCounter+"\t"+this.executionTime+"\t"+this.diagnostics.step());
-//		System.out.print(this.diagnostics.resultsIsStable()+"\n");
-		System.err.print(this.stepCounter+"\t"+this.diagnostics.step()+"\n");
+//		System.out.print("\t"+this.diagnostics.resultsIsStable()+"\t");
+//		System.err.print(this.stepCounter+"\t"+this.diagnostics.step()+"\n");
 	}
 	
 	public void step(){

@@ -27,7 +27,7 @@ public class GaussDataGenerator extends Generator {
 		for(int i=0;i<this.datasetSize;i++){
 			ScoreLabel sl =new ScoreLabel(i+1);
 			sl.addScore(i+1);
-			sl.addScore((this.random.nextGaussian())*this.skeweness);
+			sl.addScore((this.random.nextGaussian())*(this.datasetSize-this.skeweness));
 			list.add(sl);
 		}
 		

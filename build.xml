@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="matching" default="pack">
+<project name="matching" default="deploy">
 	<description>Ant buildfile for compiling and packing the src files. The default target is pack.</description>
 	<property name="src" location="src"/>
 	<property name="bin" location="bin"/>
