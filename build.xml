@@ -5,8 +5,8 @@
 	<property name="bin" location="bin"/>
 	<property name="lib" location="lib"/>
 	<property name="jar" location="pack.jar"/>
-	<property name="remote.host" value="ggian@clone1"/>
-	<property name="remote.dir" value="/local/ggian/"/>
+	<property name="remote.host" value="ggian@scirouter"/>
+	<property name="remote.dir" value="~"/>
 	<!-- <property name="conf" location="conf"/>	 -->
 	
 	<path id="classpath">
