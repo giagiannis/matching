@@ -100,7 +100,7 @@ public abstract class AbstractSMA {
 			this.proposeStep(this.women);
 		}
 		if(this.stepsDiagnostics!=0 && this.stepCounter%this.stepsDiagnostics==0){
-			System.err.print(this.stepCounter+"\t"+this.diagnostics.step()+"\n");
+			System.err.print(this.stepCounter+"\t"+this.diagnostics.step());
 //			System.out.print(this.diagnostics.resultsIsStable()+"\n");
 		}
 	}

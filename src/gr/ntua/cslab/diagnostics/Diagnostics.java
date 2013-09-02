@@ -28,7 +28,7 @@ public class Diagnostics {
 		buffer+=String.format("%.0f\t", new RegretCost(men, women).get());
 		buffer+=String.format("%.5f\t", new EgalitarianCost(men, women).get());
 		buffer+=String.format("%.5f\t", new SexEqualnessCost(men, women).get());
-		buffer+=String.format("%.0f\t", new GenderInequalityCost(men, women).get());
+		buffer+=String.format("%.0f", new GenderInequalityCost(men, women).get());
 		return buffer;
 	}
 	
