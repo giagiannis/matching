@@ -111,9 +111,9 @@ public class Aggregator {
 			}
 		}
 		sum/=values.length;
-		System.out.print("Max:\t"+max+"\t");
-		System.out.print("Sum:\t"+sum+"\t");
-		System.out.println("Min:\t"+min);
+//		System.out.print("Max:\t"+max+"\t");
+//		System.out.print("Sum:\t"+sum+"\t");
+//		System.out.println("Min:\t"+min);
 		return String.format("%.5f",sum);
 	}
 	

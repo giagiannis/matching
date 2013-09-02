@@ -34,30 +34,32 @@
 	
 
 	<target name="scp" depends="pack">
-		<exec executable="tar" failonerror="true">
+		<!--		<exec executable="tar" failonerror="true">
 			<arg value="cfvz"/>
 			<arg value="scripts.tar.gz"/>
 			<arg value="scripts"/>
-		</exec>
+		</exec>	-->
 		<exec executable="scp" failonerror="true">
 			<arg value="${jar}"/>
-			<arg value="scripts.tar.gz"/>
+			<!--	<arg value="scripts.tar.gz"/>	-->
 			<arg value="giannis@ggian:/tmp/"/>
 		</exec>
-		<delete file="scripts.tar.gz"/>
+	<!--		<delete file="scripts.tar.gz"/>		-->
 	</target>
 	
 	<target name="deploy" depends="scp">
 		<exec executable="ssh" failonerror="true">
 			<arg value="giannis@ggian"/>
-			<arg value="scp /tmp/pack.jar /tmp/scripts.tar.gz ${remote.host}:${remote.dir}"/>
+			<!--	<arg value="scp /tmp/pack.jar /tmp/scripts.tar.gz ${remote.host}:${remote.dir}"/>	-->
+			<arg value="scp /tmp/pack.jar ${remote.host}:${remote.dir}"/>
 		</exec>
-		<exec executable="ssh" failonerror="true">
+		<!--	<exec executable="ssh" failonerror="true">
 			<arg value="${remote.host}"/>
-			<arg value="	rm -rfv ${remote.dir}/scripts; 
+				<arg value="	rm -rfv ${remote.dir}/scripts; 
 							tar xfvz ${remote.dir}/scripts.tar.gz -C ${remote.dir};
 							rm -rfv ${remote.dir}/scripts.tar.gz;
-						"/>
+						"/>	
 		</exec>
+		-->
 	</target>
 </project>

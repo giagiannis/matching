@@ -21,28 +21,28 @@ if [ -z "$OUTPUT_FILE" ]; then
 	OUTPUT_FILE="output/current"
 fi
 
-if [ -z $3 ]; then
-	START_COL=1;
+if [ -z "$3" ]; then
+	COLSTOPRINT="1 2 3 4 5 6";
+	LAST_COL=6
 else
-	START_COL=$3;
+	COLSTOPRINT=$3;
+	for i in $COLSTOPRINT; do
+		LAST_COL=$i;
+	done
 fi
 
-if [ -z "$ALGORITHMS" ]; then
-	echo "Using default algorithms";
-	COUNT=${#LABEL[@]}
-else
+if [ ! -z "$ALGORITHMS" ]; then
 	let count=1;
 	for i in $ALGORITHMS; do
 		LABEL[$count]=$i;
 		let count=count+1
 	done
-	COUNT=$[count-1]
 fi
 
-PICTURE_PATH="$2pic$1.svg";
+PICTURE_PATH="$2/pic$1.eps";
 
 
-GNUPLOT_COMMAND="set grid; set terminal svg size 1440,900; set output '$PICTURE_PATH';";
+GNUPLOT_COMMAND="set grid; set terminal postscript eps size 6.4,4.0 enhanced color font 'Arial,12'; set output '$PICTURE_PATH';";
 
 
 if [ -z "$PLOT_TITLE" ]; then
@@ -52,15 +52,14 @@ else
 fi
 
 echo -en "Creating plot with cols ";
-for i in `seq $START_COL $COUNT`; do
+for i in $COLSTOPRINT; do
 	COL=$[$[$i-1]*6+$1];
 	echo -n $COL" "
-	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"'$OUTPUT_FILE' using 1:$COL with lines title '${LABEL[$i]}'";
-	if [ $i -lt $COUNT ]; then 
+	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"'$OUTPUT_FILE' using 1:$COL with linespoints title '${LABEL[$i]}' linetype $i";
+	if [ $i -lt $LAST_COL ]; then 
 		GNUPLOT_COMMAND=$GNUPLOT_COMMAND", "	
 	fi
 done
 echo
+
 gnuplot -p -e  "$GNUPLOT_COMMAND";
-
-

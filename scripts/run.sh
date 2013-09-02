@@ -56,7 +56,8 @@ MESSAGE=$MESSAGE"#\t$ALGORITHMS\n"
 MESSAGE=$MESSAGE"# Each metric is described in the source code. The default order of metrics (per algorithm) is:\n"
 MESSAGE=$MESSAGE"#\t<data size -unique-> <# steps> <exec time (ms)> <rc> <ec> <sec> <ic>\n"
 MESSAGE=$MESSAGE"#\n"
-MESSAGE=$MESSAGE"# Automatically generated message. Created: `date`"
+MESSAGE=$MESSAGE"# Automatically generated message. Created: `date`\n"
+MESSAGE=$MESSAGE"# Dataset directory:\t$DATASET_DIR"
 
 echo -e $MESSAGE > $OUTPUT
 
