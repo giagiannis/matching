@@ -10,6 +10,13 @@ LABEL[4]='AAESMA';
 LABEL[5]='AAESMAGrad';
 LABEL[6]='AAAESMA';
 
+COLOR[1]='#990000'
+COLOR[2]='#000080'
+COLOR[3]='#8B4513'
+COLOR[4]='#444444'
+COLOR[5]='#660066'
+COLOR[6]='#006000'
+
 #ALGORITHMS="SMA NESMA ESMA RESMA AAESMA AAESMADiff AAAESMA";
 
 if [ $# -lt 1 ]; then
@@ -42,7 +49,7 @@ fi
 PICTURE_PATH="$2/pic$1.eps";
 
 
-GNUPLOT_COMMAND="set grid; set terminal postscript eps size 6.4,4.0 enhanced color font 'Arial,12'; set output '$PICTURE_PATH';";
+GNUPLOT_COMMAND="set grid; set terminal postscript eps size 6.4,4.0 enhanced color font 'Arial,20' linewidth 3; set output '$PICTURE_PATH'; set key left top; ";
 
 
 if [ -z "$PLOT_TITLE" ]; then
@@ -55,7 +62,7 @@ echo -en "Creating plot with cols ";
 for i in $COLSTOPRINT; do
 	COL=$[$[$i-1]*6+$1];
 	echo -n $COL" "
-	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"'$OUTPUT_FILE' using 1:$COL with linespoints title '${LABEL[$i]}' linetype $i";
+	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"'$OUTPUT_FILE' using 1:$COL with linespoints title '${LABEL[$i]}' linecolor rgb '${COLOR[i]}'";
 	if [ $i -lt $LAST_COL ]; then 
 		GNUPLOT_COMMAND=$GNUPLOT_COMMAND", "	
 	fi
