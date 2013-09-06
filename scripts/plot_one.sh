@@ -62,7 +62,13 @@ echo -en "Creating plot with cols ";
 for i in $COLSTOPRINT; do
 	COL=$[$[$i-1]*6+$1];
 	echo -n $COL" "
-	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"'$OUTPUT_FILE' using 1:$COL with linespoints title '${LABEL[$i]}' linecolor rgb '${COLOR[i]}'";
+	let TEMP=($COL-1)%6;
+	if [ $TEMP -eq 2 ];then
+		COL="$COL/1000";
+	fi
+	COL="\$""$COL"
+
+	GNUPLOT_COMMAND=$GNUPLOT_COMMAND"'$OUTPUT_FILE' using (\$1):($COL) with linespoints title '${LABEL[$i]}' linecolor rgb '${COLOR[i]}'";
 	if [ $i -lt $LAST_COL ]; then 
 		GNUPLOT_COMMAND=$GNUPLOT_COMMAND", "	
 	fi

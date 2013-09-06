@@ -18,7 +18,7 @@ if [ ! -e $PICS_DIR ]; then
 fi
 
 PLOT_NAME[2]='Number of steps'
-PLOT_NAME[3]='Execution time (ms)'
+PLOT_NAME[3]='Execution time (sec)'
 PLOT_NAME[4]='Regret cost'
 PLOT_NAME[5]='Egalitarian cost'
 PLOT_NAME[6]='Sex equality cost (mean)'
