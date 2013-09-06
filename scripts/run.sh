@@ -10,7 +10,7 @@ if [ $# -lt 2 ]; then
 	STEP:\t\tstep size (default is 100)\n\
 	JVM_FLAGS:\tjvm flags -memory et al- (default is -Xmx2g)\n\
 	STEP_OUTPUT_DIR:\twhere will the step output exist (default is /dev/null)\n\
-	ALGORITHMS:\tspecify the names of the algorithms that you want to run (default is ESMA NESMA AESMA RESMA AAESMA AAAESMA)";
+	ALGORITHMS:\tspecify the names of the algorithms that you want to run $ALGORITHMS";
 	exit 1
 fi
 
