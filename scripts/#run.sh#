@@ -1,4 +1,4 @@
-#!/bin/bash
+file#!/bin/bash
 # script used to compare the algorithms SMA and ESMA
 # the expected arguments are: start dataset size and stop dataset size
 
@@ -57,8 +57,7 @@ MESSAGE=$MESSAGE"# Each metric is described in the source code. The default orde
 MESSAGE=$MESSAGE"#\t<data size -unique-> <# steps> <exec time (ms)> <rc> <ec> <sec> <ic>\n"
 MESSAGE=$MESSAGE"#\n"
 MESSAGE=$MESSAGE"# Automatically generated message. Created: `date`\n"
-MESSAGE=$MESSAGE"# Dataset directory (men):\t$DATASET_DIR"
-MESSAGE=$MESSAGE"# Dataset directory (women):\t$DATASET_DIR_WOMEN"
+MESSAGE=$MESSAGE"# Dataset directory:\t$DATASET_DIR"
 
 echo -e $MESSAGE > $OUTPUT
 
