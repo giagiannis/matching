@@ -6,9 +6,9 @@
 LABEL[1]='SMA';
 LABEL[2]='ESMA';
 LABEL[3]='RESMA';
-#LABEL[4]='AAESMA';
-LABEL[4]='AAESMAGrad';
-LABEL[5]='AAAESMA';
+LABEL[4]='AAESMA';
+LABEL[5]='AAESMAGrad';
+LABEL[6]='AAAESMA';
 
 ALGO_COUNT=${#LABEL[@]}
 
@@ -31,8 +31,8 @@ if [ -z "$OUTPUT_FILE" ]; then
 fi
 
 if [ -z "$3" ]; then
-	COLSTOPRINT="1 2 3 4 5"
-	LAST_COL=5
+	COLSTOPRINT="1 2 3 4 5 6"
+	LAST_COL=6
 else
 	COLSTOPRINT=$3;
 	for i in $COLSTOPRINT; do

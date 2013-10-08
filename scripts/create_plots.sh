@@ -45,5 +45,5 @@ for i in $PICS_DIR/$TMSTMP/*.eps; do
 done
 gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=$PICS_DIR/$TMSTMP/all_metrics.pdf $PICS_DIR/$TMSTMP/*.pdf
 gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=$PDF_NAME $PICS_DIR/$TMSTMP/pic{3,6}.pdf
-rm $PICS_DIR/$TMSTMP/pic?.pdf
+#rm $PICS_DIR/$TMSTMP/pic?.pdf
 ln -sf $PDF_NAME current.pdf  
