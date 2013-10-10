@@ -120,8 +120,8 @@ public class Swing extends AbstractSMA {
 	public void step() {
 		 this.proposeStep((this.menPropose()?this.men:this.women));
 		 if(this.stepsDiagnostics!=0 && this.stepCounter%this.stepsDiagnostics==0){
-			 System.out.print(this.stepCounter+"\t"+this.diagnostics.step()+"\t");
-			 System.out.println(this.diagnostics.resultsIsStable());			
+			 System.err.println(this.stepCounter+"\t"+(System.currentTimeMillis()-this.executionTime)+"\t"+this.diagnostics.step());
+			 //				System.out.print(this.diagnostics.resultsIsStable()+"\n");
 		 }
 
 			

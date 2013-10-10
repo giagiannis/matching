@@ -17,7 +17,7 @@ public abstract class AbstractSMA {
 	protected boolean cycleDetected=false;
 	protected int randomPickSteps=-1;
 	private Random rand = new Random();
-	private long executionTime;
+	protected long executionTime;
 	
 	public AbstractSMA() {
 		
@@ -41,7 +41,7 @@ public abstract class AbstractSMA {
 	public void setMen(PersonList men) {
 		this.men = men;
 		if(this.randomPickSteps==-1)
-			this.randomPickSteps=this.men.size()/10;
+			this.randomPickSteps=this.men.size();
 	}
 
 	/**
@@ -79,13 +79,16 @@ public abstract class AbstractSMA {
 	}
 	
 	public void step(){
-		if(!this.cycleDetected)
-			this.cycleDetected = (this.men.countPeopleWithCycles()>0) || (this.women.countPeopleWithCycles()>0);
+//		if(!this.cycleDetected)
+//			this.cycleDetected = (this.men.countPeopleWithCycles()>0) || (this.women.countPeopleWithCycles()>0);
+//		if(this.)
+		this.cycleDetected=true;
 		
 		boolean menDoPropose;
 		if(this.cycleDetected && this.stepCounter%this.randomPickSteps==0){
 			menDoPropose = this.rand.nextBoolean();
-			this.randomPickSteps = rand.nextInt(this.randomPickSteps)+1;
+//			this.randomPickSteps = rand.nextInt(this.randomPickSteps)+1;
+			this.randomPickSteps = this.randomPickSteps*2/3;
 //			if(this.randomPickSteps==1){
 //				System.err.println("Reached 1");
 //			}
@@ -100,7 +103,7 @@ public abstract class AbstractSMA {
 			this.proposeStep(this.women);
 		}
 		if(this.stepsDiagnostics!=0 && this.stepCounter%this.stepsDiagnostics==0){
-			System.err.print(this.stepCounter+"\t"+this.diagnostics.step());
+			System.err.println(this.stepCounter+"\t"+(System.currentTimeMillis()-this.executionTime)+"\t"+this.diagnostics.step());
 //			System.out.print(this.diagnostics.resultsIsStable()+"\n");
 		}
 	}
