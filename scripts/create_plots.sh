@@ -21,8 +21,8 @@ PLOT_NAME[2]='Number of steps'
 PLOT_NAME[3]='Execution time (sec)'
 PLOT_NAME[4]='Regret cost'
 PLOT_NAME[5]='Egalitarian cost'
-PLOT_NAME[6]='Sex equality cost (mean)'
-PLOT_NAME[7]='Inequality cost (median)'
+PLOT_NAME[6]='Sex equality cost'
+PLOT_NAME[7]='Inequality cost'
 
 PLOT_SCRIPT=`find . -name plot_one.sh`
 TMSTMP=`date "+%y%m%d_%H%M%S"`
@@ -42,8 +42,16 @@ PDF_NAME="$PICS_DIR/$TMSTMP/graphs_$TMSTMP.pdf"
 
 for i in $PICS_DIR/$TMSTMP/*.eps; do
 	epstopdf $i;
+	rm $i;
 done
-gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=$PICS_DIR/$TMSTMP/all_metrics.pdf $PICS_DIR/$TMSTMP/*.pdf
-gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=$PDF_NAME $PICS_DIR/$TMSTMP/pic{3,6}.pdf
-#rm $PICS_DIR/$TMSTMP/pic?.pdf
+mv $PICS_DIR/$TMSTMP/pic2.pdf $PICS_DIR/$TMSTMP/steps.pdf
+mv $PICS_DIR/$TMSTMP/pic3.pdf $PICS_DIR/$TMSTMP/time.pdf
+mv $PICS_DIR/$TMSTMP/pic4.pdf $PICS_DIR/$TMSTMP/rc.pdf
+mv $PICS_DIR/$TMSTMP/pic5.pdf $PICS_DIR/$TMSTMP/ec.pdf
+mv $PICS_DIR/$TMSTMP/pic6.pdf $PICS_DIR/$TMSTMP/sec.pdf
+mv $PICS_DIR/$TMSTMP/pic7.pdf $PICS_DIR/$TMSTMP/ic.pdf
+#gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=$PICS_DIR/$TMSTMP/all_metrics.pdf $PICS_DIR/$TMSTMP/*.pdf
+#gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=$PDF_NAME $PICS_DIR/$TMSTMP/pic{3,6}.pdf
+#rm $PICS_DIR/$TMSTMP/*.eps
+
 ln -sf $PDF_NAME current.pdf  

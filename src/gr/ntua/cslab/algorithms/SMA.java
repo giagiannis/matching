@@ -22,6 +22,20 @@ public class SMA extends AbstractSMA {
 		return true;
 	}
 
+	public void step(){		
+		boolean menDoPropose=true;
+		if(menDoPropose){
+			this.proposeStep(this.men);
+		} else {
+			this.proposeStep(this.women);
+		}
+		if(this.stepsDiagnostics!=0 && this.stepCounter%this.stepsDiagnostics==0){
+			System.err.println(this.stepCounter+"\t"+(System.currentTimeMillis()-this.executionTime)+"\t"+this.diagnostics.step());
+//			System.out.print(this.diagnostics.resultsIsStable()+"\n");
+		}
+	}
+
+	
 	public static void main(String[] args) {
 		AbstractSMA.runAlgorithm(SMA.class, args);
 	}

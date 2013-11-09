@@ -74,25 +74,19 @@ public abstract class AbstractSMA {
 		}
 		this.executionTime=System.currentTimeMillis()-this.executionTime;
 		System.out.print(this.stepCounter+"\t"+this.executionTime+"\t"+this.diagnostics.step());
-//		System.out.print("\t"+this.diagnostics.resultsIsStable()+"\t");
+		System.out.print("\t"+this.diagnostics.resultsIsStable()+"\n");
 //		System.err.print(this.stepCounter+"\t"+this.diagnostics.step()+"\n");
 	}
 	
 	public void step(){
 //		if(!this.cycleDetected)
 //			this.cycleDetected = (this.men.countPeopleWithCycles()>0) || (this.women.countPeopleWithCycles()>0);
-//		if(this.)
-		this.cycleDetected=true;
-		
+//		if(this.)		
 		boolean menDoPropose;
-		if(this.cycleDetected && this.stepCounter%this.randomPickSteps==0){
+		if(this.randomPickSteps==0 || this.stepCounter%this.randomPickSteps==0){
 			menDoPropose = this.rand.nextBoolean();
-//			this.randomPickSteps = rand.nextInt(this.randomPickSteps)+1;
 			this.randomPickSteps = this.randomPickSteps*2/3;
-//			if(this.randomPickSteps==1){
-//				System.err.println("Reached 1");
-//			}
-//			System.out.println(this.randomPickSteps);
+
 		} else {
 			menDoPropose = this.menPropose();
 		}

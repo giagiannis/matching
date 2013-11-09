@@ -4,16 +4,16 @@ function decide_on_labels {
 	BASE=`basename $1`
 	CORE=${BASE%.}
 	case $CORE in
-		gauss_1)
+		gauss_1 | *g1*)
 			echo -ne "80%";
 			;;
-		gauss_2)
+		gauss_2 | *g2*)
 			echo -ne "60%";
 			;;
-		gauss_3)
+		gauss_3 | *g3*)
 			echo -ne "40%";
 			;;
-		gauss_4)
+		gauss_4 | *g4*)
 			echo -ne "20%";
 			;;
 		discrete_05)
@@ -38,7 +38,7 @@ function create_data {
 	POL=0; 
 	echo -e "# Input files: $1";
 	echo -e "# Columns to print: $2";
-	echo -e "Polarity\tSMA\tESMA\tRESMA\tAAESMA\tAAAESMA"; 
+	echo -e "Polarity\tSMA\tESMA";
 	for i in $1; do 
 		B=`basename $i`;
 		F=${B%.*}
@@ -49,9 +49,12 @@ function create_data {
 	done
 }
 
-EXECUTION_TIME="3 9 15 27 33";
-EGALITARIAN="5 11 17 29 35";
-SEXEQUAL="6 12 18 30 36";
+#EXECUTION_TIME="3 9 15 27 33";
+#EGALITARIAN="5 11 17 29 35";
+#SEXEQUAL="6 12 18 30 36";
+EXECUTION_TIME="3 9";
+EGALITARIAN="5 11";
+SEXEQUAL="6 12";
 
 create_data "$1" "$EXECUTION_TIME" > time.dat
 create_data "$1" "$EGALITARIAN" > ec.dat

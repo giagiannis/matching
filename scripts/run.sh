@@ -83,9 +83,9 @@ for i in `seq $1 $STEP $2`; do \
 		else
 			STEP_OUTPUT="$STEP_OUTPUT_DIR/size-$i-$ALGO.txt"
 		fi
-		EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algorithms.$ALGO $MEN $WOMEN ";
+		EXEC="java $JVM_FLAGS -cp pack.jar gr.ntua.cslab.algorithms.$ALGO $MEN $WOMEN 100";
 		echo $EXEC;
-		$EXEC >> $OUTPUT 2>$STEP_OUTPUT;
+		$EXEC >> $OUTPUT 2>$STEP_OUTPUT_DIR/$ALGO-$i.txt;
 		echo -en "\t" >> $OUTPUT ;
 	done
 	
